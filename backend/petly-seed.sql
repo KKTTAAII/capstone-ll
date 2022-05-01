@@ -1,12 +1,12 @@
-INSERT INTO shelters (id, username, password, name, address, city, state, postcode, phone_number, email, logo, description) 
-VALUES (1, 'shelter1', 'helloShelter1', 'Grand County Animal Shelter and Animal Control', 
+INSERT INTO shelters (username, password, name, address, city, state, postcode, phone_number, email, logo, description) 
+VALUES ('shelter1', 'helloShelter1', 'Grand County Animal Shelter and Animal Control', 
 '3475 CR 57', 'Granby', 'CO', '80446', '(970) 887-2988', 'N/A', 
 'https:\/\/dl5zpyw5k3jeb.cloudfront.net\/organization-photos\/28165\/1\/?bust=1514940142&width=100', null),
-(2, 'shelter2', 'helloShelter2', 'Happy Landings Animal Rescue', 
+('shelter2', 'helloShelter2', 'Happy Landings Animal Rescue', 
 'N/A', 'Fort Collins', 'CO', '80525', '(214) 771-2475', 'happylandingsrescue@yahoo.com', 
 'https:\/\/dl5zpyw5k3jeb.cloudfront.net\/organization-photos\/44144\/2\/?bust=1511942613&width=100', 
 'Happy Landings Animal Rescue is an animal rescue group operating in TX and WY. We have rescued many animals from...'),
-(3, 'shelter3', 'helloShelter3', 'Beagles of New England States Inc. (B.O.N.E.S.), Inc.', 
+('shelter3', 'helloShelter3', 'Beagles of New England States Inc. (B.O.N.E.S.), Inc.', 
 'PO Box 1510', 'New Boston', 'NH', '03070', '(508) 473-2228', 'adoptions@bonesbeagles.org', 
 'https:\/\/dl5zpyw5k3jeb.cloudfront.net\/organization-photos\/33808\/1\/?bust=1511963387&width=100', 
 'N/A');
@@ -288,39 +288,28 @@ VALUES (1, 'Affenpinscher'),
 (274, 'Yellow Labrador Retriever'),
 (275, 'Yorkshire Terrier');
 
-INSERT INTO adoptable_dogs (id, name, breed_id, gender, age, picture, description, days_at_shelter, good_w_kids, good_w_dogs, good_w_cats)
-VALUES (1, 'Choco', 130, 'Male', 'Young', 'https:\/\/dl5zpyw5k3jeb.cloudfront.net\/photos\/pets\/55194486\/1\/?bust=1648996693&width=100', 
-'Hi there!!  My name is Choco and I am a 1 year old, Husky X.  I am already a big...', null, true, true, null),
-(2, 'Blue', 43, 'Female', 'Young', 'https:\/\/dl5zpyw5k3jeb.cloudfront.net\/photos\/pets\/55002797\/1\/?bust=1647468675&width=100', 
-'My name is Blue and I am looking for a home where I can be the only dog.  I am...', null, null, null, null),
-(3, 'Mocha', 252, 'Male', 'Young', 'https:\/\/dl5zpyw5k3jeb.cloudfront.net\/photos\/pets\/54511989\/1\/?bust=1643991592&width=100', 
-'This is Mocha.  He is about an 8 month old, Terrier cross.  Mocha, like his siblings Titi and Lita, have...', null, null, true, null),
-(4, 'Marshmallow', 229, 'Female', 'Baby', 'https:\/\/dl5zpyw5k3jeb.cloudfront.net\/photos\/pets\/55005777\/1\/?bust=1647481481&width=100', 
-'Say hello to Marshmallow! This sweet girl was born in our rescue after her mother was surrendered as a stray....', null, true, true, null),
-(5, 'German Shepherd Mix PUPPIES!!!', 112, 'Female', 'Baby', 'https:\/\/dl5zpyw5k3jeb.cloudfront.net\/photos\/pets\/55005728\/1\/?bust=1647480729&width=100', 
-'Our rescue was alerted to a sweet, young, female German Shepherd that was lying on the side of a county...', null, true, true, true),
-(6, 'German Shepherd Mix PUPPIES!!!', 112, 'Male', 'Baby', 'https:\/\/dl5zpyw5k3jeb.cloudfront.net\/photos\/pets\/55005722\/1\/?bust=1647480499&width=100', 
-'Our rescue was alerted to a sweet, young, female German Shepherd that was lying on the side of a county...', null, true, true, true),
-(7, 'Chief', 28, 'Male', 'Adult', 'https://thumbs.dreamstime.com/z/avatar-dog-avatar-dog-white-background-vector-illustration-105121614.jpg', 
-null, null, null, null, null),
-(8, 'Hope', 128, 'Female', 'Adult', 'https://thumbs.dreamstime.com/z/avatar-dog-avatar-dog-white-background-vector-illustration-105121614.jpg', 
-null, null, null, null, null),
-(9, 'Alfie', 23, 'Male', 'Young', 'https:\/\/dl5zpyw5k3jeb.cloudfront.net\/photos\/pets\/55367212\/1\/?bust=1650641371&width=100', 
-'Meet Alfie! Alfie is a 28 lb, one year old Beagle found as a stray in a creek. He has...', null, null, true, null);
+INSERT INTO adoptable_dogs (name, breed_id, gender, age, picture, description, days_at_shelter, good_w_kids, good_w_dogs, good_w_cats, shelter_id)
+VALUES ('Choco', 130, 'Male', 'Young', 'https:\/\/dl5zpyw5k3jeb.cloudfront.net\/photos\/pets\/55194486\/1\/?bust=1648996693&width=100', 
+'Hi there!!  My name is Choco and I am a 1 year old, Husky X.  I am already a big...', null, true, true, null, 1),
+('Blue', 43, 'Female', 'Young', 'https:\/\/dl5zpyw5k3jeb.cloudfront.net\/photos\/pets\/55002797\/1\/?bust=1647468675&width=100', 
+'My name is Blue and I am looking for a home where I can be the only dog.  I am...', null, null, null, null, 1),
+('Mocha', 252, 'Male', 'Young', 'https:\/\/dl5zpyw5k3jeb.cloudfront.net\/photos\/pets\/54511989\/1\/?bust=1643991592&width=100', 
+'This is Mocha.  He is about an 8 month old, Terrier cross.  Mocha, like his siblings Titi and Lita, have...', null, null, true, null, 1),
+('Marshmallow', 229, 'Female', 'Baby', 'https:\/\/dl5zpyw5k3jeb.cloudfront.net\/photos\/pets\/55005777\/1\/?bust=1647481481&width=100', 
+'Say hello to Marshmallow! This sweet girl was born in our rescue after her mother was surrendered as a stray....', null, true, true, null, 2),
+('German Shepherd Mix PUPPIES!!!', 112, 'Female', 'Baby', 'https:\/\/dl5zpyw5k3jeb.cloudfront.net\/photos\/pets\/55005728\/1\/?bust=1647480729&width=100', 
+'Our rescue was alerted to a sweet, young, female German Shepherd that was lying on the side of a county...', null, true, true, true, 2),
+('German Shepherd Mix PUPPIES!!!', 112, 'Male', 'Baby', 'https:\/\/dl5zpyw5k3jeb.cloudfront.net\/photos\/pets\/55005722\/1\/?bust=1647480499&width=100', 
+'Our rescue was alerted to a sweet, young, female German Shepherd that was lying on the side of a county...', null, true, true, true, 2),
+('Chief', 28, 'Male', 'Adult', 'https://thumbs.dreamstime.com/z/avatar-dog-avatar-dog-white-background-vector-illustration-105121614.jpg', 
+null, null, null, null, null, 3),
+('Hope', 128, 'Female', 'Adult', 'https://thumbs.dreamstime.com/z/avatar-dog-avatar-dog-white-background-vector-illustration-105121614.jpg', 
+null, null, null, null, null, 3),
+('Alfie', 23, 'Male', 'Young', 'https:\/\/dl5zpyw5k3jeb.cloudfront.net\/photos\/pets\/55367212\/1\/?bust=1650641371&width=100', 
+'Meet Alfie! Alfie is a 28 lb, one year old Beagle found as a stray in a creek. He has...', null, null, true, null, 3);
 
-INSERT INTO shelters_adoptable_dogs (id, shelter_id, adoptable_dogs_id)
-VALUES (1, 1, 1),
-(2, 1, 2),
-(3, 1, 3),
-(4, 2, 4),
-(5, 2, 5),
-(6, 2, 6),
-(7, 3, 7),
-(8, 3, 8),
-(9, 3, 9);
-
-INSERT INTO adopters (id, username, password, description, private_outdoors, num_of_dogs, preferred_gender, preferred_age)
-VALUES (1, 'nhawker0', 'yrnwI0KK', 'morph revolutionary niches', false, 1, 'Female', 'Young'),
-(2, 'fwadlow1', '60eForkV', 'recontextualize user-centric convergence', false, 2, 'Female', 'Baby'),
-(3, 'cbein2', 'XT1X8Ox', 'visualize vertical eyeballs', false, 3, 'Female', 'Adult');
+INSERT INTO adopters (username, password, description, private_outdoors, num_of_dogs, preferred_gender, preferred_age)
+VALUES ('nhawker0', 'yrnwI0KK', 'morph revolutionary niches', false, 1, 'Female', 'Young'),
+('fwadlow1', '60eForkV', 'recontextualize user-centric convergence', false, 2, 'Female', 'Baby'),
+('cbein2', 'XT1X8Ox', 'visualize vertical eyeballs', false, 3, 'Female', 'Adult');
 

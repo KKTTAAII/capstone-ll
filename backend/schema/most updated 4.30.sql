@@ -1,5 +1,5 @@
 ﻿CREATE TABLE "shelters" (
-    "id" SERIAL PRIMARY KEY,
+    "id" serial   NULL,
     "username" VARCHAR(25)   NOT NULL,
     "password" text   NOT NULL,
     "name" text   NOT NULL,
@@ -15,13 +15,13 @@
 );
 
 CREATE TABLE "adoptable_dogs" (
-    "id" SERIAL PRIMARY KEY,
+    "id" serial   NULL,
     "name" text   NOT NULL,
     "breed_id" int   NOT NULL,
     "gender" text   NOT NULL,
     "age" text   NOT NULL,
     "picture" text   NOT NULL,
-    "description" text NULL,
+    "description" text   NOT NULL,
     "days_at_shelter" int   NULL,
     "good_w_kids" boolean   NULL,
     "good_w_dogs" boolean   NULL,
@@ -30,7 +30,7 @@ CREATE TABLE "adoptable_dogs" (
 );
 
 CREATE TABLE "adopters" (
-    "id" SERIAL PRIMARY KEY,
+    "id" serial   NULL,
     "username" VARCHAR(25)   NOT NULL,
     "password" text   NOT NULL,
     "description" text   NOT NULL,
@@ -42,12 +42,12 @@ CREATE TABLE "adopters" (
 );
 
 CREATE TABLE "breed" (
-    "id" SERIAL PRIMARY KEY,
+    "id" serial   NULL,
     "breed" text   NOT NULL
 );
 
 CREATE TABLE "fav_dogs" (
-    "id" SERIAL PRIMARY KEY,
+    "id" serial   NULL,
     "adopters_id" int   NOT NULL,
     "adoptable_pets_id" int   NOT NULL
 );
@@ -63,3 +63,4 @@ REFERENCES "adopters" ("id");
 
 ALTER TABLE "fav_dogs" ADD CONSTRAINT "fk_fav_dogs_adoptable_pets_id" FOREIGN KEY("adoptable_pets_id")
 REFERENCES "adoptable_dogs" ("id");
+
