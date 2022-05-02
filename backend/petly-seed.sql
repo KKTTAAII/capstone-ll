@@ -308,8 +308,8 @@ null, null, null, null, null, 3),
 ('Alfie', 23, 'Male', 'Young', 'https:\/\/dl5zpyw5k3jeb.cloudfront.net\/photos\/pets\/55367212\/1\/?bust=1650641371&width=100', 
 'Meet Alfie! Alfie is a 28 lb, one year old Beagle found as a stray in a creek. He has...', null, null, true, null, 3);
 
-INSERT INTO adopters (username, password, description, private_outdoors, num_of_dogs, preferred_gender, preferred_age)
-VALUES ('nhawker0', 'yrnwI0KK', 'morph revolutionary niches', false, 1, 'Female', 'Young'),
-('fwadlow1', '60eForkV', 'recontextualize user-centric convergence', false, 2, 'Female', 'Baby'),
-('cbein2', 'XT1X8Ox', 'visualize vertical eyeballs', false, 3, 'Female', 'Adult');
+INSERT INTO adopters (username, password, email, description, private_outdoors, num_of_dogs, preferred_gender, preferred_age)
+VALUES ('nhawker0', 'yrnwI0KK', 'hfjuhb@gmail.com','morph revolutionary niches', false, 1, 'Female', 'Young'),
+('fwadlow1', '60eForkV', 'bfjhbu@hotmail.com', 'recontextualize user-centric convergence', false, 2, 'Female', 'Baby'),
+('cbein2', 'XT1X8Ox', 'bfghui@yahoo.com', 'visualize vertical eyeballs', false, 3, 'Female', 'Adult');
 
