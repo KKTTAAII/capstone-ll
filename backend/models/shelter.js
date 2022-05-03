@@ -177,10 +177,10 @@ class Shelter {
     return sheltersRes.rows;
   }
 
-  /** Given a shelter name, return data about shelter.
+  /** Given a shelter username, return data about shelter.
    *
    * Returns { id, username, name, email, phoneNumber, city, state, isAdmin  }
-   *   where adoptable_dogs is [{ name, breed_id, gender, age, picture, description }, ...]
+   *   where adoptable_dogs are [{ name, breed_id, gender, age, picture, description }, ...]
    *
    * Throws NotFoundError if not found.
    **/
@@ -234,7 +234,7 @@ class Shelter {
   static async update(username, data) {
     const { setCols, values } = sqlForPartialUpdate(data, {
       phonNumber: "phone_number",
-      isAdmin: "is_admin"
+      isAdmin: "is_admin",
     });
 
     const handleVarIdx = "$" + (values.length + 1);
@@ -258,7 +258,7 @@ class Shelter {
 
     if (!shelter) throw new NotFoundError(`No shelter: ${username}`);
 
-    return company;
+    return shelter;
   }
 
   /**Delete given shelter from db; return 'deleted'

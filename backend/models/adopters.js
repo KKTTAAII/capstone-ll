@@ -98,7 +98,7 @@ class Adopter {
                     preferred_age AS "preferredAge",
                     is_admin AS "isAdmin"
                `[
-        username,
+        (username,
         hashedPassword,
         email,
         picture,
@@ -107,7 +107,7 @@ class Adopter {
         numOfDogs,
         preferredGender,
         preferredAge,
-        isAdmin
+        isAdmin)
       ]
     );
 
@@ -120,153 +120,203 @@ class Adopter {
    *
    * searchFilters (all optional):
    * -username (will find case-insensitive parital matches)
-   * -city
-   * -state
    *
-   * Returns [{username, name, email, phone_number, city, state, is_admin}]
+   * Returns [{username, email, picture, description, private_outdoors, num_of_dogs, preferred_gender, preferred_age, is_admin}]
    */
   static async findAll(searchFilters = {}) {
-    let query = `SELECT s.username,
-                s.name,
-                s.email,
-                s.phone_number, 
-                s.city,
-                s.state, 
-                s.is_admin,
-                a.name AS dog_name,
-                a.breed_id AS breed,
-                a.gender 
-                a.picture
-            FROM shelters s
-            JOIN adoptable_dogs a
-            ON s.id = a.shelter_id`;
+    let query = `SELECT username,
+                        email, 
+                        picture,
+                        description,
+                        private_outdoors AS "privateOutdoors",
+                        num_of_dogs AS "numOfDogs",
+                        preferred_gender AS "preferredGender",
+                        preferred_age AS "preferredAge",   
+                        is_admin AS "isAdmin"
+                      FROM adopters`;
     let whereExpressions = [];
     let queryValues = [];
-    const { name, city, state } = searchFilters;
+    const { username } = searchFilters;
 
-    if (name) {
-      queryValues.push(`%${name}%`);
-      whereExpressions.push(`name ILIKE $${queryValues.length}`);
-    }
-
-    if (city) {
-      queryValues.push(`%${city}%`);
-      whereExpressions.push(`city ILIKE $${queryValues.length}`);
-    }
-
-    if (state) {
-      queryValues.push(`%${state}%`);
-      whereExpressions.push(`state ILIKE $${queryValues.length}`);
+    if (username) {
+      queryValues.push(`%${username}%`);
+      whereExpressions.push(`username ILIKE $${queryValues.length}`);
     }
 
     if (whereExpressions.length > 0) {
       query += " WHERE " + whereExpressions.join(" AND ");
     }
 
-    query += " ORDER BY s.name";
-    const sheltersRes = await db.query(query, queryValues);
-    return sheltersRes.rows;
+    query += " ORDER BY username";
+    const adoptersRes = await db.query(query, queryValues);
+    return adoptersRes.rows;
   }
 
-  /** Given a shelter name, return data about shelter.
+  /** Given an adopter username, return data about adopter.
    *
-   * Returns { id, username, name, email, phone_number, city, state, is_admin  }
-   *   where adoptable_dogs is [{ name, breed_id, gender, age, picture, description }, ...]
+   * Returns { username, email, picture, description, private_outdoors, num_of_dogs, preferred_gender, preferred_age, is_admin  }
+   *   where fav_dogs are [{ name, breed_id, gender, age, picture, description }, ...]
    *
    * Throws NotFoundError if not found.
    **/
   static async get(username) {
-    const shelterRes = await db.query(
+    const adopterRes = await db.query(
       `SELECT  id,
                 username,
-                name,
-                email,
-                phone_number, 
-                city, 
-                state,
-                is_admin
-            FROM shelters
-            WHERE username = $1`,
+                email, 
+                picture,
+                description,
+                private_outdoors AS "privateOutdoors",
+                num_of_dogs AS "numOfDogs",
+                preferred_gender AS "preferredGender",
+                preferred_age AS "preferredAge",   
+                is_admin AS "isAdmin"
+              FROM adopters
+              WHERE username = $1`,
       [username]
     );
 
-    const shelter = shelterRes.rows[0];
+    const adopter = adopterRes.rows[0];
 
-    if (!shelter) throw new NotFoundError(`No shelter: ${username}`);
+    if (!adopter) throw new NotFoundError(`No adopter: ${username}`);
 
-    const adoptable_dogsRes = await db.query(
-      `SELECT name,
-                breed_id,
-                gender,
-                age,
-                picture,
-                description
-            FROM adoptable_dogs
-            WHERE shelter_id = $1`,
-      [shelter.id]
+    const fav_dogsRes = await db.query(
+      `SELECT f.name,
+                f.breed_id,
+                f.gender,
+                f.age,
+                f.picture,
+                f.description
+            FROM adoptable_dogs d
+            JOIN fav_dogs f
+            ON f.adoptable_pets_id = d.id
+            WHERE adopters_id = $1`,
+      [adopter.id]
     );
 
-    shelter.adoptable_dogs = adoptable_dogsRes.rows;
+    adopter.fav_dogs = fav_dogsRes.rows;
 
-    return shelter;
+    return adopter;
   }
 
-  /** Update shelter data with `data`.
+  /** Update adopter data with `data`.
    *
    * This is a "partial update" --- it's fine if data doesn't contain all the
    * fields; this only changes provided ones.
    *
-   * Data can include: {name, address, city, state, postcode, phone_number, email, logo, description}
+   * Data can include: {username, email, picture, description, private_outdoors, num_of_dogs, preferred_gender, preferred_age}
    *
-   * Returns {username, name, address, city, state, postcode, phone_number, email, logo, description}
+   * Returns {username, email, picture, description, private_outdoors, num_of_dogs, preferred_gender, preferred_age}
    *
    * Throws NotFoundError if not found.
    */
   static async update(username, data) {
     const { setCols, values } = sqlForPartialUpdate(data, {
-      phonNumber: "phone_number",
+      privateOutdoors: "private_outdoors",
+      numOfDogs: "num_of_dogs",
+      preferredGender: "preferred_gender",
+      preferredAge: "preferred_age",
+      isAdmin: "is_admin",
     });
 
     const handleVarIdx = "$" + (values.length + 1);
 
-    const querySql = `UPDATE shelters
+    const querySql = `UPDATE adopters
                         SET ${setCols}
                         WHERE username = ${handleVarIdx}
                         RETURNING username,
-                                    name,
-                                    address,
-                                    city,
-                                    state,
-                                    postcode,
-                                    phone_number AS phoneNumber,
-                                    email,
-                                    logo,
-                                    description`;
+                                  email, 
+                                  picture,
+                                  description,
+                                  private_outdoors AS "privateOutdoors",
+                                  num_of_dogs AS "numOfDogs",
+                                  preferred_gender AS "preferredGender",
+                                  preferred_age AS "preferredAge",   
+                                  is_admin AS "isAdmin"`;
+
     const result = await db.query(querySql, [...values, username]);
-    const shelter = result.rows[0];
+    const adopter = result.rows[0];
 
-    if (!shelter) throw new NotFoundError(`No shelter: ${username}`);
+    if (!adopter) throw new NotFoundError(`No adopter: ${username}`);
 
-    return company;
+    return adopter;
   }
 
-  /**Delete given shelter from db; return 'deleted'
+  /**Delete given adopter from db; return 'deleted'
    *
-   * throws NotFoundError if shelter not found
+   * throws NotFoundError if adopter not found
    */
   static async remove(username) {
     const result = await db.query(
       `DELETE 
-             FROM shelters
+             FROM adopters
              WHERE username = $1
              RETURNING username`,
       [username]
     );
 
-    const shelter = result.rows[0];
+    const adopter = result.rows[0];
 
-    if (!shelter) throw new NotFoundError(`No shelter: ${username}`);
+    if (!adopter) throw new NotFoundError(`No adopter: ${username}`);
 
-    return { delete: "Shelter Deleted" };
+    return { delete: "Adopter Deleted" };
+  }
+
+  /**Like a dog. Add to fav_dogs table */
+  static async favorite(adoptable_pets_id, username) {
+    const adopterRes = await db.query(
+      `SELECT username, id
+            FROM adopters
+            WHERE username = $1`,
+      [username]
+    );
+
+    const adopter = adopterRes.rows[0];
+
+    if (!adopter) throw new NotFoundError(`No adopter: ${username}`);
+
+    const fav_dogRes = await db.query(
+      `INSERT INTO fav_dogs
+                (adopters_id, adoptable_pets_id)
+              VALUES ($1, $2)
+              RETURNING adopters_id,
+                        adoptable_pets_id`,
+      [adopter.id, adoptable_pets_id]
+    );
+
+    const fav_dog = fav_dogRes.rows[0];
+
+    return fav_dog;
+  }
+
+  /**Unfavorite fav_dog. Delete it from the database */
+  static async unFavorite(adoptable_pets_id, username) {
+    const adopterRes = await db.query(
+      `SELECT username, id
+            FROM adopters
+            WHERE username = $1`,
+      [username]
+    );
+
+    const adopter = adopterRes.rows[0];
+
+    if (!adopter) throw new NotFoundError(`No adopter: ${username}`);
+
+    const fav_dogRes = await db.query(
+      `DELETE 
+             FROM fav_dogs
+             WHERE adopters_id = $1 AND adoptable_pets_id = $2
+             RETURNING adoptable_pets_id`,
+      [adopter.id, adoptable_pets_id]
+    );
+
+    const fav_dog = fav_dogRes.rows[0];
+
+    if (!fav_dog)
+      throw new NotFoundError(
+        `No favorited dog with that dog id ${adoptable_pets_id} and username ${username}`
+      );
+
+    return { delete: "Favorite Dog Deleted" };
   }
 }
