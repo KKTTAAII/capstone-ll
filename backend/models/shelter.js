@@ -46,9 +46,31 @@ class Shelter {
 
   /**Create and Register a shelter from data, update db, return new shelter data
    *
-   * data should be {username, password, name, address, city, state, postcode, phoneNumber, email, logo, description, isAdmin}
+   * data should be {username, 
+   * password, 
+   * name, 
+   * address, 
+   * city, 
+   * state, 
+   * postcode, 
+   * phoneNumber, 
+   * email, 
+   * logo, 
+   * description, 
+   * isAdmin}
    *
-   * returns {username, password, name, address, city, state, postcode, phoneNumber, email, logo, description, isAdmin}
+   * returns {username, 
+   * password, 
+   * name, 
+   * address, 
+   * city, 
+   * state, 
+   * postcode, 
+   * phoneNumber, 
+   * email, 
+   * logo, 
+   * description, 
+   * isAdmin}
    *
    * Throws BadRequestError if shelter already in db
    */
@@ -132,18 +154,18 @@ class Shelter {
    * -city
    * -state
    *
-   * Returns [{username, name, email, phone_number, city, state, is_admin}]
+   * Returns [{username, name, email, phoneNumber, city, state, isAdmin}]
    */
   static async findAll(searchFilters = {}) {
     let query = `SELECT s.username,
                 s.name,
                 s.email,
-                s.phone_number, 
+                s.phone_number AS "phoneNumber", 
                 s.city,
                 s.state, 
-                s.is_admin,
-                a.name AS dog_name,
-                a.breed_id AS breed,
+                s.is_admin AS "isAdmin",
+                a.name AS dogName,
+                a.breed_id AS breedId,
                 a.gender 
                 a.picture
             FROM shelters s
@@ -179,8 +201,22 @@ class Shelter {
 
   /** Given a shelter username, return data about shelter.
    *
-   * Returns { id, username, name, email, phoneNumber, city, state, isAdmin  }
-   *   where adoptable_dogs are [{ name, breed_id, gender, age, picture, description }, ...]
+   * Returns { id, 
+   * username, 
+   * name, 
+   * email, 
+   * phoneNumber, 
+   * city, 
+   * state, 
+   * isAdmin  }
+   * 
+   *   where adoptable_dogs are [{ 
+   * name, 
+   * breedId, 
+   * gender, 
+   * age, 
+   * picture, 
+   * description }, ...]
    *
    * Throws NotFoundError if not found.
    **/
@@ -205,7 +241,7 @@ class Shelter {
 
     const adoptable_dogsRes = await db.query(
       `SELECT name,
-                breed_id,
+                breed_id AS "breedId",
                 gender,
                 age,
                 picture,
@@ -225,9 +261,26 @@ class Shelter {
    * This is a "partial update" --- it's fine if data doesn't contain all the
    * fields; this only changes provided ones.
    *
-   * Data can include: {name, address, city, state, postcode, phone_number, email, logo, description}
+   * Data can include: {name, 
+   * address, 
+   * city, 
+   * state, 
+   * postcode, 
+   * phoneNumber, 
+   * email, 
+   * logo, 
+   * description}
    *
-   * Returns {username, name, address, city, state, postcode, phone_number, email, logo, description}
+   * Returns {username, 
+   * name, 
+   * address, 
+   * city, 
+   * state, 
+   * postcode, 
+   * phoneNumber, 
+   * email, 
+   * logo, 
+   * description}
    *
    * Throws NotFoundError if not found.
    */

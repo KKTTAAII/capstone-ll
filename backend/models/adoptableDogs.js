@@ -14,9 +14,29 @@ const DEFAULT_PIC = require("../assets/dog.png");
 class Adoptable_dog {
   /**Create an adoptable_dog, update db, return new adoptable_dog data
    *
-   * data should be {name, breed_id, gender, age, picture, description, days_at_shelter, good_w_kids, good_w_dogs, good_w_cats, shelter_id}
+   * data should be {name, 
+   * breed_id, 
+   * gender, 
+   * age, 
+   * picture, 
+   * description, 
+   * daysAtShelter, 
+   * goodWKids, 
+   * goodWDogs, 
+   * goodWCcats, 
+   * shelterId}
    *
-   * returns {name, breed_id, gender, age, picture, description, days_at_shelter, good_w_kids, good_w_dogs, good_w_cats, shelter_id}
+   * returns {name, 
+   * breed_id, 
+   * gender, 
+   * age, 
+   * picture, 
+   * description, 
+   * daysAtShelter, 
+   * goodWKids, 
+   * goodWDogs, 
+   * goodWCcats, 
+   * shelterId}
    *
    * Throws BadRequestError if a dog already in db
    */
@@ -64,7 +84,7 @@ class Adoptable_dog {
         breedId,
         gender,
         age,
-        (picture = DEFAULT_PIC),
+        picture,
         description,
         daysAtShelter,
         goodWKids,
@@ -90,7 +110,17 @@ class Adoptable_dog {
    * -goodWDogs
    * -goodWCats
    *
-   * Returns [{name, breed_id, gender, age, picture, description, days_at_shelter, good_w_kids, good_w_dogs, good_w_cats, shelter_id}]
+   * Returns [{name, 
+   * breedId, 
+   * gender, 
+   * age, 
+   * picture, 
+   * description, 
+   * daysAtShelter, 
+   * goodWKids, 
+   * goodWDogs, 
+   * goodWCcats, 
+   * shelterId}]
    */
   static async findAll(searchFilters = {}) {
     let query = `SELECT a.name,
@@ -160,8 +190,19 @@ class Adoptable_dog {
 
   /** Given a dog id.
    *
-   * Returns { name, breed_id, gender, age, picture, description, days_at_shelter, good_w_kids, good_w_dogs, good_w_cats, shelter_id  }
-   *   where shelter is [{ username, name, city, state, email, phone_number }, ...]
+   * Returns { name, 
+   * breedId, 
+   * gender, 
+   * age, 
+   * picture, 
+   * description, 
+   * daysAtShelter, 
+   * goodWKids, 
+   * goodWDogs, 
+   * goodWCcats, 
+   * shelterId}
+   *  
+   * where shelter is [{ username, name, city, state, email, phoneNumber }, ...]
    *
    * Throws NotFoundError if not found.
    **/

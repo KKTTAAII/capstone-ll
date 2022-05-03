@@ -44,9 +44,27 @@ class Adopter {
 
   /**Create and Register an adopter from data, update db, return new adopter data
    *
-   * data should be {username, password, email, picture, description, private_outdoors, num_of_dogs, preferred_gender, preferred_age, is_admin}
+   * data should be {username,
+   * password,
+   * email,
+   * picture,
+   * description,
+   * privateOutdoors,
+   * numOfDogs,
+   * preferredGender,
+   * preferredAge,
+   * isAdmin}
    *
-   * returns {username, password, email, picture, description, private_outdoors, num_of_dogs, preferred_gender, preferred_age, is_admin}
+   * returns {username,
+   * password,
+   * email,
+   * picture,
+   * description,
+   * privateOutdoors,
+   * numOfDogs,
+   * preferredGender,
+   * preferredAge,
+   * isAdmin}
    *
    * Throws BadRequestError if adopter already in db
    */
@@ -121,7 +139,15 @@ class Adopter {
    * searchFilters (all optional):
    * -username (will find case-insensitive parital matches)
    *
-   * Returns [{username, email, picture, description, private_outdoors, num_of_dogs, preferred_gender, preferred_age, is_admin}]
+   * Returns [{username,
+   * email,
+   * picture,
+   * description,
+   * privateOutdoors,
+   * numOfDogs,
+   * preferredGender,
+   * preferredAge,
+   * isAdmin}]
    */
   static async findAll(searchFilters = {}) {
     let query = `SELECT username,
@@ -154,8 +180,23 @@ class Adopter {
 
   /** Given an adopter username, return data about adopter.
    *
-   * Returns { username, email, picture, description, private_outdoors, num_of_dogs, preferred_gender, preferred_age, is_admin  }
-   *   where fav_dogs are [{ name, breed_id, gender, age, picture, description }, ...]
+   * Returns { username,
+   * email,
+   * picture,
+   * description,
+   * privateOutdoors,
+   * numOfDogs,
+   * preferredGender,
+   * preferredAge,
+   * isAdmin  }
+   *
+   * where fav_dogs are [{
+   *    name,
+   *    breedId,
+   *    gender,
+   *    age,
+   *    picture,
+   *    description }, ...]
    *
    * Throws NotFoundError if not found.
    **/
@@ -182,7 +223,7 @@ class Adopter {
 
     const fav_dogsRes = await db.query(
       `SELECT f.name,
-                f.breed_id,
+                f.breed_id AS "breedId",
                 f.gender,
                 f.age,
                 f.picture,
@@ -204,9 +245,25 @@ class Adopter {
    * This is a "partial update" --- it's fine if data doesn't contain all the
    * fields; this only changes provided ones.
    *
-   * Data can include: {username, email, picture, description, private_outdoors, num_of_dogs, preferred_gender, preferred_age}
+   * Data can include: {username,
+   * email,
+   * picture,
+   * description,
+   * privateOutdoors,
+   * numOfDogs,
+   * preferredGender,
+   * preferredAge,
+   * isAdmin}
    *
-   * Returns {username, email, picture, description, private_outdoors, num_of_dogs, preferred_gender, preferred_age}
+   * Returns {username,
+   * email,
+   * picture,
+   * description,
+   * privateOutdoors,
+   * numOfDogs,
+   * preferredGender,
+   * preferredAge,
+   * isAdmin}
    *
    * Throws NotFoundError if not found.
    */
