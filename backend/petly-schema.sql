@@ -35,9 +35,9 @@ CREATE TABLE "adopters" (
     "password" text NOT NULL,
     "email" text NOT NULL,
     "picture" text NULL,
-    "description" text NOT NULL,
-    "private_outdoors" boolean NOT NULL,
-    "num_of_dogs" int NOT NULL,
+    "description" text NULL,
+    "private_outdoors" boolean NULL,
+    "num_of_dogs" int NULL,
     "preferred_gender" text NULL,
     "preferred_age" text NULL,
     "is_admin" boolean NOT NULL DEFAULT FALSE

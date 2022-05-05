@@ -253,8 +253,7 @@ class Adopter {
    * privateOutdoors,
    * numOfDogs,
    * preferredGender,
-   * preferredAge,
-   * isAdmin}
+   * preferredAge}
    *
    * Returns {username,
    * email,

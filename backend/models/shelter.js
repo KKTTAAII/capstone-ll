@@ -122,8 +122,9 @@ class Shelter {
                 city, 
                 state, 
                 postcode, 
-                phone_number AS "phone", e
-                mail, logo, 
+                phone_number AS "phoneNumber", 
+                email, 
+                logo, 
                 descripntion, 
                 is_admin AS "isAdmin"`,
       [

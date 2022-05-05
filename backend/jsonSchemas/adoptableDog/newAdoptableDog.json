@@ -1,0 +1,117 @@
+{
+    "$schema": "http://json-schema.org/draft/2019-09/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "default": {},
+    "title": "Root Schema",
+    "required": [
+        "name",
+        "breedId",
+        "gender",
+        "age",
+        "shelterId"
+    ],
+    "properties": {
+        "name": {
+            "type": "string",
+            "default": "",
+            "title": "The name Schema",
+            "examples": [
+                "Evie"
+            ]
+        },
+        "breedId": {
+            "type": "integer",
+            "default": 0,
+            "title": "The breedId Schema",
+            "examples": [
+                5
+            ]
+        },
+        "gender": {
+            "type": "string",
+            "default": "",
+            "title": "The gender Schema",
+            "examples": [
+                "Male"
+            ]
+        },
+        "age": {
+            "type": "string",
+            "default": "",
+            "title": "The age Schema",
+            "examples": [
+                "Young"
+            ]
+        },
+        "picture": {
+            "type": "string",
+            "default": "",
+            "title": "The picture Schema",
+            "examples": [
+                "https://cdn-icons-png.flaticon.com/512/3769/3769065.png"
+            ]
+        },
+        "description": {
+            "type": "string",
+            "default": "",
+            "title": "The description Schema",
+            "examples": [
+                "I am a good dog"
+            ]
+        },
+        "daysAtShelter": {
+            "type": "integer",
+            "default": 0,
+            "title": "The daysAtShelter Schema",
+            "examples": [
+                5
+            ]
+        },
+        "goodWKids": {
+            "type": "boolean",
+            "default": false,
+            "title": "The goodWKids Schema",
+            "examples": [
+                true
+            ]
+        },
+        "goodWDogs": {
+            "type": "boolean",
+            "default": false,
+            "title": "The goodWDogs Schema",
+            "examples": [
+                true
+            ]
+        },
+        "goodWCats": {
+            "type": "boolean",
+            "default": false,
+            "title": "The goodWCats Schema",
+            "examples": [
+                false
+            ]
+        },
+        "shelterId": {
+            "type": "integer",
+            "default": 0,
+            "title": "The shelterId Schema",
+            "examples": [
+                5
+            ]
+        }
+    },
+    "examples": [{
+        "name": "Evie",
+        "breedId": 5,
+        "gender": "Male",
+        "age": "Young",
+        "picture": "https://cdn-icons-png.flaticon.com/512/3769/3769065.png",
+        "description": "I am a good dog",
+        "daysAtShelter": 5,
+        "goodWKids": true,
+        "goodWDogs": true,
+        "goodWCats": false,
+        "shelterId": 5
+    }]
+}
