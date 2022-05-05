@@ -34,7 +34,7 @@ class ForbiddenError extends ExpressError {
   }
 }
 
-modules.export = {
+module.exports = {
   ExpressError,
   NotFoundError,
   Unauthorized,

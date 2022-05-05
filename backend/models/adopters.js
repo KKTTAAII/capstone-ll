@@ -9,7 +9,8 @@ const {
 } = require("../expressError");
 const { sqlForPartialUpdate } = require("../helpers/sql");
 const { BCRYPT_WORK_FACTOR } = require("../config.js");
-const DEFAULT_PIC = require("../assets/user.png");
+const DEFAULT_PIC =
+  "https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male4-512.png";
 /**credte DEFAULT_PIC <a href="https://www.flaticon.com/free-icons/user" title="user icons">User icons created by Becris - Flaticon</a> */
 
 class Adopter {
@@ -377,3 +378,5 @@ class Adopter {
     return { delete: "Favorite Dog Deleted" };
   }
 }
+
+module.exports = Adopter;

@@ -9,7 +9,7 @@ const {
 } = require("../expressError");
 const { sqlForPartialUpdate } = require("../helpers/sql");
 const { BCRYPT_WORK_FACTOR } = require("../config.js");
-const DEFAULT_PIC = require("../assets/v987-11a.jpg");
+const DEFAULT_PIC = "https://cdn-icons-png.flaticon.com/512/3769/3769065.png";
 /**credit DEFAULT_PIC <a href='https://www.freepik.com/vectors/paw-logo'>Paw logo vector created by rawpixel.com - www.freepik.com</a> */
 
 /**Related functions for shelters */
@@ -46,30 +46,30 @@ class Shelter {
 
   /**Create and Register a shelter from data, update db, return new shelter data
    *
-   * data should be {username, 
-   * password, 
-   * name, 
-   * address, 
-   * city, 
-   * state, 
-   * postcode, 
-   * phoneNumber, 
-   * email, 
-   * logo, 
-   * description, 
+   * data should be {username,
+   * password,
+   * name,
+   * address,
+   * city,
+   * state,
+   * postcode,
+   * phoneNumber,
+   * email,
+   * logo,
+   * description,
    * isAdmin}
    *
-   * returns {username, 
-   * password, 
-   * name, 
-   * address, 
-   * city, 
-   * state, 
-   * postcode, 
-   * phoneNumber, 
-   * email, 
-   * logo, 
-   * description, 
+   * returns {username,
+   * password,
+   * name,
+   * address,
+   * city,
+   * state,
+   * postcode,
+   * phoneNumber,
+   * email,
+   * logo,
+   * description,
    * isAdmin}
    *
    * Throws BadRequestError if shelter already in db
@@ -201,21 +201,21 @@ class Shelter {
 
   /** Given a shelter username, return data about shelter.
    *
-   * Returns { id, 
-   * username, 
-   * name, 
-   * email, 
-   * phoneNumber, 
-   * city, 
-   * state, 
+   * Returns { id,
+   * username,
+   * name,
+   * email,
+   * phoneNumber,
+   * city,
+   * state,
    * isAdmin  }
-   * 
-   *   where adoptable_dogs are [{ 
-   * name, 
-   * breedId, 
-   * gender, 
-   * age, 
-   * picture, 
+   *
+   *   where adoptable_dogs are [{
+   * name,
+   * breedId,
+   * gender,
+   * age,
+   * picture,
    * description }, ...]
    *
    * Throws NotFoundError if not found.
@@ -261,25 +261,25 @@ class Shelter {
    * This is a "partial update" --- it's fine if data doesn't contain all the
    * fields; this only changes provided ones.
    *
-   * Data can include: {name, 
-   * address, 
-   * city, 
-   * state, 
-   * postcode, 
-   * phoneNumber, 
-   * email, 
-   * logo, 
+   * Data can include: {name,
+   * address,
+   * city,
+   * state,
+   * postcode,
+   * phoneNumber,
+   * email,
+   * logo,
    * description}
    *
-   * Returns {username, 
-   * name, 
-   * address, 
-   * city, 
-   * state, 
-   * postcode, 
-   * phoneNumber, 
-   * email, 
-   * logo, 
+   * Returns {username,
+   * name,
+   * address,
+   * city,
+   * state,
+   * postcode,
+   * phoneNumber,
+   * email,
+   * logo,
    * description}
    *
    * Throws NotFoundError if not found.
@@ -334,3 +334,5 @@ class Shelter {
     return { delete: "Shelter Deleted" };
   }
 }
+
+module.exports = Shelter;

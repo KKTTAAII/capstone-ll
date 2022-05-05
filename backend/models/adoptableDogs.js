@@ -1,41 +1,37 @@
 "use strict";
 
 const db = require("../db");
-const bcrypt = require("bcrypt");
-const {
-  BadRequestError,
-  NotFoundError,
-  UnauthorizedError,
-} = require("../expressError");
+const { NotFoundError } = require("../expressError");
 const { sqlForPartialUpdate } = require("../helpers/sql");
-const DEFAULT_PIC = require("../assets/dog.png");
+const DEFAULT_PIC =
+  "https://www.templateupdates.com/wp-content/uploads/2018/03/Cute-Dog-Icon-Set-Template.jpg";
 /**DEFAULT PIC credit: <a href="https://www.flaticon.com/free-icons/dog" title="dog icons">Dog icons created by Flat Icons - Flaticon</a> */
 
 class Adoptable_dog {
   /**Create an adoptable_dog, update db, return new adoptable_dog data
    *
-   * data should be {name, 
-   * breed_id, 
-   * gender, 
-   * age, 
-   * picture, 
-   * description, 
-   * daysAtShelter, 
-   * goodWKids, 
-   * goodWDogs, 
-   * goodWCcats, 
+   * data should be {name,
+   * breed_id,
+   * gender,
+   * age,
+   * picture,
+   * description,
+   * daysAtShelter,
+   * goodWKids,
+   * goodWDogs,
+   * goodWCcats,
    * shelterId}
    *
-   * returns {name, 
-   * breed_id, 
-   * gender, 
-   * age, 
-   * picture, 
-   * description, 
-   * daysAtShelter, 
-   * goodWKids, 
-   * goodWDogs, 
-   * goodWCcats, 
+   * returns {name,
+   * breed_id,
+   * gender,
+   * age,
+   * picture,
+   * description,
+   * daysAtShelter,
+   * goodWKids,
+   * goodWDogs,
+   * goodWCcats,
    * shelterId}
    *
    * Throws BadRequestError if a dog already in db
@@ -110,16 +106,16 @@ class Adoptable_dog {
    * -goodWDogs
    * -goodWCats
    *
-   * Returns [{name, 
-   * breedId, 
-   * gender, 
-   * age, 
-   * picture, 
-   * description, 
-   * daysAtShelter, 
-   * goodWKids, 
-   * goodWDogs, 
-   * goodWCcats, 
+   * Returns [{name,
+   * breedId,
+   * gender,
+   * age,
+   * picture,
+   * description,
+   * daysAtShelter,
+   * goodWKids,
+   * goodWDogs,
+   * goodWCcats,
    * shelterId}]
    */
   static async findAll(searchFilters = {}) {
@@ -190,18 +186,18 @@ class Adoptable_dog {
 
   /** Given a dog id.
    *
-   * Returns { name, 
-   * breedId, 
-   * gender, 
-   * age, 
-   * picture, 
-   * description, 
-   * daysAtShelter, 
-   * goodWKids, 
-   * goodWDogs, 
-   * goodWCcats, 
+   * Returns { name,
+   * breedId,
+   * gender,
+   * age,
+   * picture,
+   * description,
+   * daysAtShelter,
+   * goodWKids,
+   * goodWDogs,
+   * goodWCcats,
    * shelterId}
-   *  
+   *
    * where shelter is [{ username, name, city, state, email, phoneNumber }, ...]
    *
    * Throws NotFoundError if not found.
@@ -327,3 +323,5 @@ class Adoptable_dog {
     return { delete: "Adoptable dog Deleted" };
   }
 }
+
+module.exports = Adoptable_dog;
