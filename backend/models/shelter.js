@@ -17,14 +17,14 @@ const DEFAULT_PIC = "https://cdn-icons-png.flaticon.com/512/3769/3769065.png";
 class Shelter {
   /** authenticate shelter user with username, password.
    *
-   * Returns { username, name, email }
+   * Returns { username, name, email, is_admin }
    *
    * Throws UnauthorizedError if user not found or wrong password.
    **/
-  static async authenticate({ username, password }) {
+  static async authenticate(username, password) {
     //try to find the shelter user first
     const result = await db.query(
-      `SELECT username, password, name, email, is_admin
+      `SELECT username, password, name, email, is_admin AS "isAdmin"
         FROM shelters
         WHERE username = $1`,
       [username]
@@ -39,9 +39,9 @@ class Shelter {
         delete shelter.password;
         return shelter;
       }
-    } else {
-      throw new UnauthorizedError("Invalid username/password");
-    }
+    } 
+    
+    throw new UnauthorizedError("Invalid username/password");
   }
 
   /**Create and Register a shelter from data, update db, return new shelter data
@@ -110,7 +110,7 @@ class Shelter {
          city, 
          state, 
          postcode, 
-         phone_number AS "phoneNumber", 
+         phone_number, 
          email, 
          logo, 
          description, 
@@ -122,11 +122,11 @@ class Shelter {
                 city, 
                 state, 
                 postcode, 
-                phone_number AS "phoneNumber", 
+                phone_number, 
                 email, 
                 logo, 
-                descripntion, 
-                is_admin AS "isAdmin"`,
+                description, 
+                is_admin`,
       [
         username,
         hashedPassword,

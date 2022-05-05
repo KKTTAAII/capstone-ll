@@ -43,4 +43,4 @@ app.use(function (err, req, res, next) {
   });
 });
 
-modules.export = app;
+module.exports = app;

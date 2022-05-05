@@ -16,14 +16,14 @@ const DEFAULT_PIC =
 class Adopter {
   /** authenticate adopter user with username, password.
    *
-   * Returns { username, name, email }
+   * Returns { username, name, email, is_admin }
    *
    * Throws UnauthorizedError if user not found or wrong password.
    **/
-  static async authenticate({ username, password }) {
+  static async authenticate(username, password) {
     //try to find the adopter user first
     const result = await db.query(
-      `SELECT username, password, email, is_admin
+      `SELECT username, password, email, is_admin AS "isAdmin"
         FROM adopters
         WHERE username = $1`,
       [username]
@@ -33,14 +33,15 @@ class Adopter {
 
     if (adopter) {
       //compare hashed password to a new has from password
+      console.log("THIS IS PASSWPRD:", password);
+      console.log("THIS IS hashed PASSWPRD:", adopter.password);
       const isValid = await bcrypt.compare(password, adopter.password);
       if (isValid) {
         delete adopter.password;
         return adopter;
       }
-    } else {
+    } 
       throw new UnauthorizedError("Invalid username/password");
-    }
   }
 
   /**Create and Register an adopter from data, update db, return new adopter data
@@ -76,11 +77,11 @@ class Adopter {
     email,
     picture = DEFAULT_PIC,
     description = "",
-    privateOutdoors,
-    numOfDogs,
-    preferredGender,
-    preferredAge,
-    isAdmin = false,
+    privateOutdoors = false,
+    numOfDogs = 0,
+    preferredGender = "Male",
+    preferredAge = "Young",
+    isAdmin,
   }) {
     const duplicateCheck = await db.query(
       `SELECT username
@@ -106,7 +107,7 @@ class Adopter {
          preferred_gender,
          preferred_age,   
          is_admin)
-        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
         RETURNING username, 
                     email,
                     picture,
@@ -116,8 +117,9 @@ class Adopter {
                     preferred_gender AS "preferredGender",
                     preferred_age AS "preferredAge",
                     is_admin AS "isAdmin"
-               `[
-        (username,
+               `,
+      [
+        username,
         hashedPassword,
         email,
         picture,
@@ -126,7 +128,7 @@ class Adopter {
         numOfDogs,
         preferredGender,
         preferredAge,
-        isAdmin)
+        isAdmin,
       ]
     );
 

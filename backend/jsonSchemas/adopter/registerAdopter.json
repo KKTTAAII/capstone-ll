@@ -7,8 +7,7 @@
     "required": [
         "username",
         "password",
-        "email",
-        "isAdmin"
+        "email"
     ],
     "properties": {
         "username": {
