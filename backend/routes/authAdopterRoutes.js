@@ -4,7 +4,7 @@
 
 const jsonschema = require("jsonschema");
 
-const Adopter = require("../models/adopters");
+const Adopter = require("../models/adopter");
 const express = require("express");
 const router = new express.Router();
 const { createToken } = require("../helpers/tokens");
@@ -19,7 +19,7 @@ const authAdopterSchema = require("../jsonSchemas/adopter/registerAdopter.json")
  * Authorization required: none
  */
 
-router.post("/token", async function (req, res, next) {
+router.post("/token", async (req, res, next) => {
   try {
     const validator = jsonschema.validate(req.body, userAuthScema);
     if (!validator.valid) {
@@ -45,7 +45,7 @@ router.post("/token", async function (req, res, next) {
  * Authorization required: none
  */
 
-router.post("/register", async function (req, res, next) {
+router.post("/register", async (req, res, next) => {
   try {
     const validator = jsonschema.validate(req.body, authAdopterSchema);
     if (!validator.valid) {

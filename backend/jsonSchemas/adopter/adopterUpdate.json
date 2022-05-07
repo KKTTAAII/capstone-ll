@@ -4,11 +4,7 @@
     "type": "object",
     "default": {},
     "title": "Root Schema",
-    "required": [
-        "username",
-        "password",
-        "email"
-    ],
+    "required": [],
     "properties": {
         "username": {
             "type": "string",

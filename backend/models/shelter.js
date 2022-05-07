@@ -39,8 +39,8 @@ class Shelter {
         delete shelter.password;
         return shelter;
       }
-    } 
-    
+    }
+
     throw new UnauthorizedError("Invalid username/password");
   }
 
@@ -87,7 +87,7 @@ class Shelter {
     email,
     logo = DEFAULT_PIC,
     description = "",
-    isAdmin = false,
+    isAdmin,
   }) {
     const duplicateCheck = await db.query(
       `SELECT username, name
@@ -96,8 +96,9 @@ class Shelter {
       [username]
     );
 
-    if (duplicateCheck.rows[0])
+    if (duplicateCheck.rows[0]) {
       throw new BadRequestError(`Duplicate shelter username: ${username}`);
+    }
 
     const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
 
@@ -126,7 +127,7 @@ class Shelter {
                 email, 
                 logo, 
                 description, 
-                is_admin`,
+                is_admin AS isAdmin`,
       [
         username,
         hashedPassword,
@@ -158,20 +159,16 @@ class Shelter {
    * Returns [{username, name, email, phoneNumber, city, state, isAdmin}]
    */
   static async findAll(searchFilters = {}) {
-    let query = `SELECT s.username,
-                s.name,
-                s.email,
-                s.phone_number AS "phoneNumber", 
-                s.city,
-                s.state, 
-                s.is_admin AS "isAdmin",
-                a.name AS dogName,
-                a.breed_id AS breedId,
-                a.gender 
-                a.picture
-            FROM shelters s
-            JOIN adoptable_dogs a
-            ON s.id = a.shelter_id`;
+    let query = `SELECT username,
+                name,
+                email,
+                phone_number AS "phoneNumber", 
+                city,
+                state,
+                description,
+                logo, 
+                is_admin AS "isAdmin"
+            FROM shelters`;
     let whereExpressions = [];
     let queryValues = [];
     const { name, city, state } = searchFilters;
@@ -195,8 +192,12 @@ class Shelter {
       query += " WHERE " + whereExpressions.join(" AND ");
     }
 
-    query += " ORDER BY s.name";
+    query += " ORDER BY name";
+
     const sheltersRes = await db.query(query, queryValues);
+
+    if (!sheltersRes.rows[0]) throw new NotFoundError(`No shelters Found`);
+
     return sheltersRes.rows;
   }
 
@@ -211,7 +212,7 @@ class Shelter {
    * state,
    * isAdmin  }
    *
-   *   where adoptable_dogs are [{
+   *   where adoptableDogs are [{
    * name,
    * breedId,
    * gender,
@@ -240,7 +241,7 @@ class Shelter {
 
     if (!shelter) throw new NotFoundError(`No shelter: ${username}`);
 
-    const adoptable_dogsRes = await db.query(
+    const adoptableDogsRes = await db.query(
       `SELECT name,
                 breed_id AS "breedId",
                 gender,
@@ -252,7 +253,7 @@ class Shelter {
       [shelter.id]
     );
 
-    shelter.adoptable_dogs = adoptable_dogsRes.rows;
+    shelter.adoptableDogs = adoptableDogsRes.rows;
 
     return shelter;
   }
@@ -306,7 +307,7 @@ class Shelter {
                                     email,
                                     logo,
                                     description,
-                                    is_admin AS "isAdmin`;
+                                    is_admin AS "isAdmin"`;
     const result = await db.query(querySql, [...values, username]);
     const shelter = result.rows[0];
 
@@ -330,9 +331,42 @@ class Shelter {
 
     const shelter = result.rows[0];
 
-    if (!shelter) throw new NotFoundError(`No shelter: ${username}`);
+    if (!shelter) {
+      throw new NotFoundError(`No shelter: ${username}`);
+    }
 
     return { delete: "Shelter Deleted" };
+  }
+
+  /**Update password of that user
+   *
+   * return {updated: password was updated}
+   */
+  static async updatePassword(username, password) {
+    const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
+
+    const result = await db.query(
+      `SELECT username, password, name, email, is_admin AS "isAdmin"
+        FROM shelters
+        WHERE username = $1`,
+      [username]
+    );
+
+    const shelter = result.rows[0];
+
+    if (!shelter) throw new NotFoundError(`No shelter: ${username}`);
+
+    const updatePasswordRes = await db.query(
+      `UPDATE shelters
+                        SET password = $1
+                        WHERE username = $2
+                        RETURNING username`,
+      [hashedPassword, username]
+    );
+
+    const response = updatePasswordRes.rows[0];
+
+    return { updatedPassword: response };
   }
 }
 

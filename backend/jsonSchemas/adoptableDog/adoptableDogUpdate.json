@@ -4,13 +4,7 @@
     "type": "object",
     "default": {},
     "title": "Root Schema",
-    "required": [
-        "name",
-        "breedId",
-        "gender",
-        "age",
-        "shelterId"
-    ],
+    "required": [],
     "properties": {
         "name": {
             "type": "string",

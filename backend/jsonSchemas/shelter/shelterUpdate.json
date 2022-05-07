@@ -4,14 +4,7 @@
     "type": "object",
     "default": {},
     "title": "Root Schema",
-    "required": [
-        "name",
-        "password",
-        "city",
-        "state",
-        "phoneNumber",
-        "email"
-    ],
+    "required": [],
     "properties": {
         "name": {
             "type": "string",
@@ -96,7 +89,6 @@
     },
     "examples": [{
         "name": "dog shelter",
-        "password": "vgbhjnkl",
         "address": "303 hello Rd.",
         "city": "New York",
         "state": "NY",

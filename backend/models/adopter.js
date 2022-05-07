@@ -33,8 +33,6 @@ class Adopter {
 
     if (adopter) {
       //compare hashed password to a new has from password
-      console.log("THIS IS PASSWPRD:", password);
-      console.log("THIS IS hashed PASSWPRD:", adopter.password);
       const isValid = await bcrypt.compare(password, adopter.password);
       if (isValid) {
         delete adopter.password;
