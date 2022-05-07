@@ -38,8 +38,8 @@ class Adopter {
         delete adopter.password;
         return adopter;
       }
-    } 
-      throw new UnauthorizedError("Invalid username/password");
+    }
+    throw new UnauthorizedError("Invalid username/password");
   }
 
   /**Create and Register an adopter from data, update db, return new adopter data
@@ -223,12 +223,13 @@ class Adopter {
     if (!adopter) throw new NotFoundError(`No adopter: ${username}`);
 
     const fav_dogsRes = await db.query(
-      `SELECT f.name,
-                f.breed_id AS "breedId",
-                f.gender,
-                f.age,
-                f.picture,
-                f.description
+      `SELECT d.name,
+                d.breed_id AS "breedId",
+                d.gender,
+                d.age,
+                d.picture,
+                d.description,
+                d.shelter_id AS "shelterId"
             FROM adoptable_dogs d
             JOIN fav_dogs f
             ON f.adoptable_pets_id = d.id
@@ -236,7 +237,7 @@ class Adopter {
       [adopter.id]
     );
 
-    adopter.fav_dogs = fav_dogsRes.rows;
+    adopter.favDogs = fav_dogsRes.rows;
 
     return adopter;
   }
@@ -319,8 +320,8 @@ class Adopter {
     return { delete: "Adopter Deleted" };
   }
 
-  /**Like a dog. Add to fav_dogs table */
-  static async favorite(adoptable_pets_id, username) {
+  /**Like/Fav a dog. Add to fav_dogs table */
+  static async favorite(adoptablePetsId, username) {
     const adopterRes = await db.query(
       `SELECT username, id
             FROM adopters
@@ -332,18 +333,18 @@ class Adopter {
 
     if (!adopter) throw new NotFoundError(`No adopter: ${username}`);
 
-    const fav_dogRes = await db.query(
+    const favDogRes = await db.query(
       `INSERT INTO fav_dogs
                 (adopters_id, adoptable_pets_id)
               VALUES ($1, $2)
               RETURNING adopters_id,
                         adoptable_pets_id`,
-      [adopter.id, adoptable_pets_id]
+      [adopter.id, adoptablePetsId]
     );
 
-    const fav_dog = fav_dogRes.rows[0];
+    const favDog = favDogRes.rows[0];
 
-    return fav_dog;
+    return favDog;
   }
 
   /**Unfavorite fav_dog. Delete it from the database */
@@ -375,6 +376,37 @@ class Adopter {
       );
 
     return { delete: "Favorite Dog Deleted" };
+  }
+
+  /**Update password of that user
+   *
+   * return {updated: password was updated}
+   */
+  static async updatePassword(username, password) {
+    const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
+
+    const result = await db.query(
+      `SELECT username, password, email, is_admin AS "isAdmin"
+        FROM adopters
+        WHERE username = $1`,
+      [username]
+    );
+
+    const shelter = result.rows[0];
+
+    if (!shelter) throw new NotFoundError(`No adopter: ${username}`);
+
+    const updatePasswordRes = await db.query(
+      `UPDATE adopters
+                        SET password = $1
+                        WHERE username = $2
+                        RETURNING username`,
+      [hashedPassword, username]
+    );
+
+    const response = updatePasswordRes.rows[0];
+
+    return { updatedPassword: response };
   }
 }
 

@@ -73,7 +73,6 @@ router.get("/:username", ensureLoggedIn, async (req, res, next) => {
 router.post("/", ensureAdmin, async (req, res, next) => {
   try {
     const newShelter = await Shelter.register({ ...req.body, isAdmin: false });
-    console.log(newShelter);
     return res.status(201).json({ newShelter });
   } catch (err) {
     return next(err);
