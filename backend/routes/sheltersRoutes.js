@@ -16,7 +16,9 @@ const {
 } = require("../middleware/auth");
 const shelterSearchSchema = require("../jsonSchemas/shelter/shelterSearch.json");
 const shelterUpdateSchema = require("../jsonSchemas/shelter/shelterUpdate.json");
-const sendEmail = require("../utils/sendResetPasswordEmail");
+const contactShelterSchema = require("../jsonSchemas/shelter/contactShelter.json");
+const sendResetPasswordEmail = require("../utils/sendResetPasswordEmail");
+const sendContactShelterEmail = require("../utils/contactShelterEmail");
 const { createToken } = require("../helpers/tokens");
 
 const router = new express.Router();
@@ -162,7 +164,12 @@ router.post("/forgotPassword", async (req, res, next) => {
     const resetPasswordToken = createToken(shelter[0], { expiresIn: "1h" });
     const host = req.get("host");
     const link = `http://${host}/shelters/resetForgotPassword/${username}?token=${resetPasswordToken}`;
-    await sendEmail(shelter[0].email, "Password reset", link, username);
+    await sendResetPasswordEmail(
+      shelter[0].email,
+      "Password reset",
+      link,
+      username
+    );
     res.send("password reset link sent to the email");
   } catch (err) {
     return next(err);
@@ -193,10 +200,36 @@ router.post("/resetForgotPassword/:username", async (req, res, next) => {
   }
 });
 
-/**POST adopter emails shelter 
- * 
+/**POST adopter emails shelter
+ *
  * adopter info {email, message, name} = req.body
- * 
+ *
  */
+router.post(
+  "/contactShelter/:username",
+  ensureLoggedIn,
+  async (req, res, next) => {
+    try {
+      const validator = jsonschema.validate(req.body, contactShelterSchema);
+      if (!validator.valid) {
+        const errs = validator.errors.map(e => e.stack);
+        throw new BadRequestError(errs);
+      }
+      const shelter = await Shelter.get(req.params.username);
+      const shelterEmail = shelter.email;
+      const { adopterEmail, name, message } = req.body;
+      await sendContactShelterEmail(
+        adopterEmail,
+        "Hi, I am interested in adopting one of your dogs",
+        name,
+        message,
+        shelterEmail
+      );
+      res.send("Email sent to the shelter");
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
 
 module.exports = router;

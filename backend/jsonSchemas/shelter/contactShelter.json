@@ -1,0 +1,43 @@
+{
+    "$schema": "http://json-schema.org/draft/2019-09/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "default": {},
+    "title": "Root Schema",
+    "required": [
+        "name",
+        "adopterEmail",
+        "message"
+    ],
+    "properties": {
+        "name": {
+            "type": "string",
+            "default": "",
+            "title": "The name Schema",
+            "examples": [
+                "Daniel"
+            ]
+        },
+        "adopterEmail": {
+            "type": "string",
+            "default": "",
+            "title": "The email Schema",
+            "examples": [
+                "dan@gmail.com"
+            ]
+        },
+        "message": {
+            "type": "string",
+            "default": "",
+            "title": "The message Schema",
+            "examples": [
+                "Hi, I am very interested in adopting Choco. Can I have more info about him, please?"
+            ]
+        }
+    },
+    "examples": [{
+        "name": "Daniel",
+        "adopterEmail": "dan@gmail.com",
+        "message": "Hi, I am very interested in adopting Choco. Can I have more info about him, please?"
+    }]
+}

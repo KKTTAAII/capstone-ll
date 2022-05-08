@@ -16,7 +16,7 @@ const {
 } = require("../middleware/auth");
 const adopterSearchSchema = require("../jsonSchemas/adopter/adopterSearch.json");
 const adopterUpdateSchema = require("../jsonSchemas/adopter/adopterUpdate.json");
-const sendEmail = require("../utils/sendResetPasswordEmail");
+const sendResetPasswordEmail = require("../utils/sendResetPasswordEmail");
 const { createToken } = require("../helpers/tokens");
 
 const router = new express.Router();
@@ -206,7 +206,12 @@ router.post("/forgotPassword", async (req, res, next) => {
     const resetPasswordToken = createToken(adopter[0], { expiresIn: "1h" });
     const host = req.get("host");
     const link = `http://${host}/adopters/resetForgotPassword/${username}?token=${resetPasswordToken}`;
-    await sendEmail(adopter[0].email, "Password reset", link, username);
+    await sendResetPasswordEmail(
+      adopter[0].email,
+      "Password reset",
+      link,
+      username
+    );
     res.send("password reset link sent to the email");
   } catch (err) {
     return next(err);
