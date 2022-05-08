@@ -4,6 +4,8 @@
 
 const jsonschema = require("jsonschema");
 const express = require("express");
+const jwt = require("jsonwebtoken");
+const { SECRET_KEY } = require("../config");
 
 const Adopter = require("../models/adopter");
 const { BadRequestError } = require("../expressError");
@@ -15,7 +17,7 @@ const {
 const adopterSearchSchema = require("../jsonSchemas/adopter/adopterSearch.json");
 const adopterUpdateSchema = require("../jsonSchemas/adopter/adopterUpdate.json");
 const sendEmail = require("../utils/sendEmail");
-const createToken = require("../helpers/tokens");
+const { createToken } = require("../helpers/tokens");
 
 const router = new express.Router();
 
@@ -147,7 +149,7 @@ router.patch(
       if (!password) {
         throw new BadRequestError(errs);
       }
-      const response = await Adopter.updatePassword(username, password);
+      await Adopter.updatePassword(username, password);
       return res.json({ password: "Password reset successfully" });
     } catch (err) {
       return next(err);
@@ -202,14 +204,35 @@ router.post("/forgotPassword", async (req, res, next) => {
     }
     const adopter = await Adopter.findAll({ email: email });
     const { username } = adopter[0];
-    let token = req.headers.authorization;
-    if (!token) {
-      token = createToken(adopter[0].username);
-    }
+    const resetPasswordToken = createToken(adopter[0], { expiresIn: "1h" });
     const host = req.get("host");
-    const link = `${host}/adopters/resetPassword/${username}`;
-    await sendEmail(adopter[0].email, "Password reset", link);
+    const link = `http://${host}/adopters/resetForgotPassword/${username}?token=${resetPasswordToken}`;
+    await sendEmail(adopter[0].email, "Password reset", link, username);
     res.send("password reset link sent to the email");
+  } catch (err) {
+    return next(err);
+  }
+});
+
+/**POST reset password for forgot password case
+ *
+ * The user will have to put new a new password in the field
+ *
+ * password from req.body
+ */
+router.post("/resetForgotPassword/:username", async (req, res, next) => {
+  try {
+    const { token } = req.query;
+    const { username } = req.params;
+    const { password } = req.body;
+    let user = jwt.verify(token, SECRET_KEY);
+    //check if we have everything we need - password input, usernames matche, token
+    if (user && user.username === username && password) {
+      await Adopter.updatePassword(username, password);
+      return res.json({ password: "Password reset successfully" });
+    } else {
+      throw new BadRequestError("Invalid or expired password reset token");
+    }
   } catch (err) {
     return next(err);
   }

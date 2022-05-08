@@ -1,6 +1,18 @@
 const nodemailer = require("nodemailer");
+const requestPasswordResteTemplate = `<html>
+<head>
+    <style>
+    </style>
+</head>
+<body>
+    <p>Hi {{name}},</p>
+    <p>You requested to reset your password.</p>
+    <p> Please, click the link below to reset your password</p>
+    <a href="https://{{link}}">Reset Password</a>
+</body>
+</html>`;
 
-const sendEmail = async (email, subject, text) => {
+const sendEmail = async (email, subject, link, username) => {
   try {
     const transporter = nodemailer.createTransport({
       host: process.env.HOST,
@@ -16,8 +28,15 @@ const sendEmail = async (email, subject, text) => {
       from: process.env.EMAIL,
       to: email,
       subject: subject,
-      text: text,
-      html: `<b>Password reset email</b> ${text}`,
+      text: link,
+      html: `<html>
+      <body>
+          <p>Hi ${username},</p>
+          <p>You requested to reset your password.</p>
+          <p> Please, click the link below to reset your password</p>
+          <a href="${link}">Reset Password</a>
+      </body>
+      </html>`,
     });
 
     console.log("email sent sucessfully");
