@@ -9,7 +9,8 @@ const {
 } = require("../expressError");
 const { sqlForPartialUpdate } = require("../helpers/sql");
 const { BCRYPT_WORK_FACTOR } = require("../config.js");
-const DEFAULT_PIC = "https://cdn-icons-png.flaticon.com/512/3769/3769065.png";
+const DEFAULT_PIC = "../assets/v987-11a.jpg";
+// "https://cdn-icons-png.flaticon.com/512/3769/3769065.png";
 /**credit DEFAULT_PIC <a href='https://www.freepik.com/vectors/paw-logo'>Paw logo vector created by rawpixel.com - www.freepik.com</a> */
 
 /**Related functions for shelters */

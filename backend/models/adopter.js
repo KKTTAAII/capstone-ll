@@ -9,8 +9,8 @@ const {
 } = require("../expressError");
 const { sqlForPartialUpdate } = require("../helpers/sql");
 const { BCRYPT_WORK_FACTOR } = require("../config.js");
-const DEFAULT_PIC =
-  "https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male4-512.png";
+const DEFAULT_PIC = "../assets/user.png";
+// "https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male4-512.png";
 /**credte DEFAULT_PIC <a href="https://www.flaticon.com/free-icons/user" title="user icons">User icons created by Becris - Flaticon</a> */
 
 class Adopter {

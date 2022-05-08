@@ -3,8 +3,8 @@
 const db = require("../db");
 const { NotFoundError } = require("../expressError");
 const { sqlForPartialUpdate } = require("../helpers/sql");
-const DEFAULT_PIC =
-  "https://www.templateupdates.com/wp-content/uploads/2018/03/Cute-Dog-Icon-Set-Template.jpg";
+const DEFAULT_PIC = "../assets/dog.png";
+// "https://www.templateupdates.com/wp-content/uploads/2018/03/Cute-Dog-Icon-Set-Template.jpg";
 /**DEFAULT PIC credit: <a href="https://www.flaticon.com/free-icons/dog" title="dog icons">Dog icons created by Flat Icons - Flaticon</a> */
 
 class Adoptable_dog {
