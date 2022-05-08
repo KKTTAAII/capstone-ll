@@ -20,6 +20,7 @@ app.use(express.json());
 app.use(morgan("tiny"));
 app.use(/\/((?!forgotPassword).)*/, authenticateJWT);
 app.use(/\/((?!resetForgotPassword).)*/, authenticateJWT);
+app.use(authenticateJWT);
 
 app.use("/authShelter", authShelterRoutes);
 app.use("/authAdopter", authAdopterRoutes);

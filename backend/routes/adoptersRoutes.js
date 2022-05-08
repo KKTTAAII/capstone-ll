@@ -84,7 +84,6 @@ router.get("/:username", ensureLoggedIn, async (req, res, next) => {
 router.post("/", ensureAdmin, async (req, res, next) => {
   try {
     const newAdopter = await Adopter.register({ ...req.body, isAdmin: false });
-    console.log(newAdopter);
     return res.status(201).json({ newAdopter });
   } catch (err) {
     return next(err);

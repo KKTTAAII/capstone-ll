@@ -4,6 +4,8 @@
 
 const jsonschema = require("jsonschema");
 const express = require("express");
+const jwt = require("jsonwebtoken");
+const { SECRET_KEY } = require("../config");
 
 const Shelter = require("../models/shelter");
 const { BadRequestError } = require("../expressError");
@@ -14,6 +16,8 @@ const {
 } = require("../middleware/auth");
 const shelterSearchSchema = require("../jsonSchemas/shelter/shelterSearch.json");
 const shelterUpdateSchema = require("../jsonSchemas/shelter/shelterUpdate.json");
+const sendEmail = require("../utils/sendEmail");
+const { createToken } = require("../helpers/tokens");
 
 const router = new express.Router();
 
@@ -145,5 +149,48 @@ router.patch(
     }
   }
 );
+
+/**POST Forgot Password => email the user to reset password */
+router.post("/forgotPassword", async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      throw new BadRequestError(errs);
+    }
+    const shelter = await Shelter.findAll({ email: email });
+    const { username } = shelter[0];
+    const resetPasswordToken = createToken(shelter[0], { expiresIn: "1h" });
+    const host = req.get("host");
+    const link = `http://${host}/shelters/resetForgotPassword/${username}?token=${resetPasswordToken}`;
+    await sendEmail(shelter[0].email, "Password reset", link, username);
+    res.send("password reset link sent to the email");
+  } catch (err) {
+    return next(err);
+  }
+});
+
+/**POST reset password for forgot password case
+ *
+ * The user will have to put new a new password in the field
+ *
+ * password from req.body
+ */
+router.post("/resetForgotPassword/:username", async (req, res, next) => {
+  try {
+    const { token } = req.query;
+    const { username } = req.params;
+    const { password } = req.body;
+    let user = jwt.verify(token, SECRET_KEY);
+    //check if we have everything we need - password input, usernames matche, token
+    if (user && user.username === username && password) {
+      await Shelter.updatePassword(username, password);
+      return res.json({ password: "Password reset successfully" });
+    } else {
+      throw new BadRequestError("Invalid or expired password reset token");
+    }
+  } catch (err) {
+    return next(err);
+  }
+});
 
 module.exports = router;
