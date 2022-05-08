@@ -139,6 +139,7 @@ class Adopter {
    *
    * searchFilters (all optional):
    * -username (will find case-insensitive parital matches)
+   * -email
    *
    * Returns [{username,
    * email,
@@ -163,11 +164,16 @@ class Adopter {
                       FROM adopters`;
     let whereExpressions = [];
     let queryValues = [];
-    const { username } = searchFilters;
+    const { username, email } = searchFilters;
 
     if (username) {
       queryValues.push(`%${username}%`);
       whereExpressions.push(`username ILIKE $${queryValues.length}`);
+    }
+
+    if (email) {
+      queryValues.push(`%${email}%`);
+      whereExpressions.push(`email ILIKE $${queryValues.length}`);
     }
 
     if (whereExpressions.length > 0) {
@@ -405,8 +411,6 @@ class Adopter {
     );
 
     const response = updatePasswordRes.rows[0];
-
-    return { updatedPassword: response };
   }
 }
 

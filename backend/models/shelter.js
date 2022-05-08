@@ -155,6 +155,7 @@ class Shelter {
    * -name (will find case-insensitive parital matches)
    * -city
    * -state
+   * -email
    *
    * Returns [{username, name, email, phoneNumber, city, state, isAdmin}]
    */
@@ -171,7 +172,7 @@ class Shelter {
             FROM shelters`;
     let whereExpressions = [];
     let queryValues = [];
-    const { name, city, state } = searchFilters;
+    const { name, city, state, email } = searchFilters;
 
     if (name) {
       queryValues.push(`%${name}%`);
@@ -186,6 +187,11 @@ class Shelter {
     if (state) {
       queryValues.push(`%${state}%`);
       whereExpressions.push(`state ILIKE $${queryValues.length}`);
+    }
+
+    if (email) {
+      queryValues.push(`%${email}%`);
+      whereExpressions.push(`email ILIKE $${queryValues.length}`);
     }
 
     if (whereExpressions.length > 0) {
