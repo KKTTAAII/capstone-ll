@@ -16,7 +16,7 @@ const {
 } = require("../middleware/auth");
 const adopterSearchSchema = require("../jsonSchemas/adopter/adopterSearch.json");
 const adopterUpdateSchema = require("../jsonSchemas/adopter/adopterUpdate.json");
-const sendEmail = require("../utils/sendEmail");
+const sendEmail = require("../utils/sendResetPasswordEmail");
 const { createToken } = require("../helpers/tokens");
 
 const router = new express.Router();

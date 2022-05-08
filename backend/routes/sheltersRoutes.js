@@ -16,7 +16,7 @@ const {
 } = require("../middleware/auth");
 const shelterSearchSchema = require("../jsonSchemas/shelter/shelterSearch.json");
 const shelterUpdateSchema = require("../jsonSchemas/shelter/shelterUpdate.json");
-const sendEmail = require("../utils/sendEmail");
+const sendEmail = require("../utils/sendResetPasswordEmail");
 const { createToken } = require("../helpers/tokens");
 
 const router = new express.Router();
@@ -192,5 +192,11 @@ router.post("/resetForgotPassword/:username", async (req, res, next) => {
     return next(err);
   }
 });
+
+/**POST adopter emails shelter 
+ * 
+ * adopter info {email, message, name} = req.body
+ * 
+ */
 
 module.exports = router;
