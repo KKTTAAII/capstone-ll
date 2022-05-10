@@ -11,7 +11,6 @@ const authAdopterRoutes = require("./routes/authAdopterRoutes");
 const sheltersRoutes = require("./routes/sheltersRoutes");
 const adoptersRoutes = require("./routes/adoptersRoutes");
 const adoptableDogsRoutes = require("./routes/adoptableDogsRoutes");
-const breedsRoutes = require("./routes/breedsRoutes");
 
 const app = express();
 
@@ -29,7 +28,6 @@ app.use("/authAdopter", authAdopterRoutes);
 app.use("/shelters", sheltersRoutes);
 app.use("/adopters", adoptersRoutes);
 app.use("/adoptableDogs", adoptableDogsRoutes);
-app.use("/breeds", breedsRoutes);
 
 /** Handle 404 errors -- this matches everything */
 app.use(function (req, res, next) {
