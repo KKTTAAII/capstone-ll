@@ -4,8 +4,6 @@
 
 const jsonschema = require("jsonschema");
 const express = require("express");
-const jwt = require("jsonwebtoken");
-const { SECRET_KEY } = require("../config");
 
 const Shelter = require("../models/shelter");
 const { BadRequestError } = require("../expressError");
@@ -17,9 +15,8 @@ const {
 const shelterSearchSchema = require("../jsonSchemas/shelter/shelterSearch.json");
 const shelterUpdateSchema = require("../jsonSchemas/shelter/shelterUpdate.json");
 const contactShelterSchema = require("../jsonSchemas/shelter/contactShelter.json");
-const sendResetPasswordEmail = require("../utils/sendResetPasswordEmail");
 const sendContactShelterEmail = require("../utils/contactShelterEmail");
-const { createToken } = require("../helpers/tokens");
+const { getShelters, getShelter } = require("../helpers/getShelters");
 
 const router = new express.Router();
 
@@ -30,6 +27,7 @@ const router = new express.Router();
  * -name (will find case-insensitive parital matches)
  * -city
  * -state
+ * -postcode
  *
  * Authorization required: Logged in
  */
@@ -41,15 +39,18 @@ router.get("/", ensureLoggedIn, async (req, res, next) => {
       const errs = validator.errors.map(e => e.stack);
       throw new BadRequestError(errs);
     }
-
+    const petFinderShelters = await getShelters(query);
     const shelters = await Shelter.findAll(query);
+    if (petFinderShelters[0]) {
+      shelters.push(...petFinderShelters);
+    }
     return res.json({ shelters });
   } catch (err) {
     return next(err);
   }
 });
 
-/** GET /[username]  =>  { shelter }
+/** GET /[id]  =>  { shelter }
  *
  *  shelter is { username, name, email, phoneNumber, city, state, description, logo, isAdmin }
  *   where adoptable_dogs is [{ name, breedId, gender, age, picture, description }, ...]
@@ -57,10 +58,16 @@ router.get("/", ensureLoggedIn, async (req, res, next) => {
  * Authorization required: logged in
  */
 
-router.get("/:username", ensureLoggedIn, async (req, res, next) => {
-  const { username } = req.params;
+router.get("/:id", ensureLoggedIn, async (req, res, next) => {
+  const { id } = req.params;
   try {
-    const shelter = await Shelter.get(username);
+    let shelter;
+    if (+id) {
+      shelter = await Shelter.get(id);
+    } else {
+      shelter = await getShelter(id);
+    }
+
     return res.json({ shelter });
   } catch (err) {
     return next(err);
@@ -85,7 +92,7 @@ router.post("/", ensureAdmin, async (req, res, next) => {
   }
 });
 
-/** PATCH /[username] { fld1, fld2, ... } => { shelter }
+/** PATCH /[id] { fld1, fld2, ... } => { shelter }
  *
  * Patches shelter data.
  *
@@ -97,104 +104,31 @@ router.post("/", ensureAdmin, async (req, res, next) => {
  * Authorization required: correctuser or admin
  */
 
-router.patch(
-  "/:username",
-  ensureCorrectUserOrAdmin,
-  async function (req, res, next) {
-    try {
-      const validator = jsonschema.validate(req.body, shelterUpdateSchema);
-      if (!validator.valid) {
-        const errs = validator.errors.map(e => e.stack);
-        throw new BadRequestError(errs);
-      }
-
-      const shelter = await Shelter.update(req.params.username, req.body);
-      return res.json({ shelter });
-    } catch (err) {
-      return next(err);
+router.patch("/:id", ensureCorrectUserOrAdmin, async function (req, res, next) {
+  try {
+    const validator = jsonschema.validate(req.body, shelterUpdateSchema);
+    if (!validator.valid) {
+      const errs = validator.errors.map(e => e.stack);
+      throw new BadRequestError(errs);
     }
-  }
-);
 
-/** DELETE /[username]  =>  { deleted: shelter }
+    const { id } = req.params;
+    const shelter = await Shelter.update(id, req.body);
+    return res.json({ shelter });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+/** DELETE /id  =>  { deleted: shelter }
  *
  * Authorization: admin
  */
-router.delete("/:username", ensureAdmin, async (req, res, next) => {
+router.delete("/:id", ensureAdmin, async (req, res, next) => {
   try {
-    const { username } = req.params;
-    const deleted = await Shelter.remove(username);
+    const { id } = req.params;
+    const deleted = await Shelter.remove(id);
     return res.json(deleted);
-  } catch (err) {
-    return next(err);
-  }
-});
-
-/**PATH UPDATE PASSWORD /[username] =>  { updatedPassword: response }
- *
- * Authorization: correctUser or admin
- */
-router.patch(
-  "/resetPassword/:username",
-  ensureCorrectUserOrAdmin,
-  async (req, res, next) => {
-    try {
-      const { username } = req.params;
-      const { password } = req.body;
-      if (!password) {
-        throw new BadRequestError(errs);
-      }
-      const response = await Shelter.updatePassword(username, password);
-      return res.json(response);
-    } catch (err) {
-      return next(err);
-    }
-  }
-);
-
-/**POST Forgot Password => email the user to reset password */
-router.post("/forgotPassword", async (req, res, next) => {
-  try {
-    const { email } = req.body;
-    if (!email) {
-      throw new BadRequestError(errs);
-    }
-    const shelter = await Shelter.findAll({ email: email });
-    const { username } = shelter[0];
-    const resetPasswordToken = createToken(shelter[0], { expiresIn: "1h" });
-    const host = req.get("host");
-    const link = `http://${host}/shelters/resetForgotPassword/${username}?token=${resetPasswordToken}`;
-    await sendResetPasswordEmail(
-      shelter[0].email,
-      "Password reset",
-      link,
-      username
-    );
-    res.send("password reset link sent to the email");
-  } catch (err) {
-    return next(err);
-  }
-});
-
-/**POST reset password for forgot password case
- *
- * The user will have to put new a new password in the field
- *
- * password from req.body
- */
-router.post("/resetForgotPassword/:username", async (req, res, next) => {
-  try {
-    const { token } = req.query;
-    const { username } = req.params;
-    const { password } = req.body;
-    let user = jwt.verify(token, SECRET_KEY);
-    //check if we have everything we need - password input, usernames matche, token
-    if (user && user.username === username && password) {
-      await Shelter.updatePassword(username, password);
-      return res.json({ password: "Password reset successfully" });
-    } else {
-      throw new BadRequestError("Invalid or expired password reset token");
-    }
   } catch (err) {
     return next(err);
   }
@@ -205,31 +139,104 @@ router.post("/resetForgotPassword/:username", async (req, res, next) => {
  * adopter info {email, message, name} = req.body
  *
  */
-router.post(
-  "/contactShelter/:username",
-  ensureLoggedIn,
-  async (req, res, next) => {
-    try {
-      const validator = jsonschema.validate(req.body, contactShelterSchema);
-      if (!validator.valid) {
-        const errs = validator.errors.map(e => e.stack);
-        throw new BadRequestError(errs);
-      }
-      const shelter = await Shelter.get(req.params.username);
-      const shelterEmail = shelter.email;
-      const { adopterEmail, name, message } = req.body;
-      await sendContactShelterEmail(
-        adopterEmail,
-        "Hi, I am interested in adopting one of your dogs",
-        name,
-        message,
-        shelterEmail
-      );
-      res.send("Email sent to the shelter");
-    } catch (err) {
-      return next(err);
+router.post("/contactShelter/:id", ensureLoggedIn, async (req, res, next) => {
+  try {
+    const validator = jsonschema.validate(req.body, contactShelterSchema);
+    if (!validator.valid) {
+      const errs = validator.errors.map(e => e.stack);
+      throw new BadRequestError(errs);
     }
+    const { id } = req.params;
+    const shelter = await Shelter.get(id);
+    const shelterEmail = shelter.email;
+    const { adopterEmail, name, message } = req.body;
+    await sendContactShelterEmail(
+      adopterEmail,
+      "Hi, I am interested in adopting one of your dogs",
+      name,
+      message,
+      shelterEmail
+    );
+    res.send("Email sent to the shelter");
+  } catch (err) {
+    return next(err);
   }
-);
+});
 
 module.exports = router;
+
+//version 2.0
+// const jwt = require("jsonwebtoken");
+// const { SECRET_KEY } = require("../config");
+// const { createToken } = require("../helpers/tokens");
+// const sendResetPasswordEmail = require("../utils/sendResetPasswordEmail");
+
+// /**PATH UPDATE PASSWORD /[username] =>  { updatedPassword: response }
+//  *
+//  * Authorization: correctUser or admin
+//  */
+//  router.patch(
+//   "/resetPassword/:username",
+//   ensureCorrectUserOrAdmin,
+//   async (req, res, next) => {
+//     try {
+//       const { username } = req.params;
+//       const { password } = req.body;
+//       if (!password) {
+//         throw new BadRequestError(errs);
+//       }
+//       const response = await Shelter.updatePassword(username, password);
+//       return res.json(response);
+//     } catch (err) {
+//       return next(err);
+//     }
+//   }
+// );
+
+// /**POST Forgot Password => email the user to reset password */
+// router.post("/forgotPassword", async (req, res, next) => {
+//   try {
+//     const { email } = req.body;
+//     if (!email) {
+//       throw new BadRequestError(errs);
+//     }
+//     const shelter = await Shelter.findAll({ email: email });
+//     const { username } = shelter[0];
+//     const resetPasswordToken = createToken(shelter[0], { expiresIn: "1h" });
+//     const host = req.get("host");
+//     const link = `http://${host}/shelters/resetForgotPassword/${username}?token=${resetPasswordToken}`;
+//     await sendResetPasswordEmail(
+//       shelter[0].email,
+//       "Password reset",
+//       link,
+//       username
+//     );
+//     res.send("password reset link sent to the email");
+//   } catch (err) {
+//     return next(err);
+//   }
+// });
+
+// /**POST reset password for forgot password case
+//  *
+//  * The user will have to put new a new password in the field
+//  *
+//  * password from req.body
+//  */
+// router.post("/resetForgotPassword/:username", async (req, res, next) => {
+//   try {
+//     const { token } = req.query;
+//     const { username } = req.params;
+//     const { password } = req.body;
+//     let user = jwt.verify(token, SECRET_KEY);
+//     //check if we have everything we need - password input, usernames matche, token
+//     if (user && user.username === username && password) {
+//       await Shelter.updatePassword(username, password);
+//       return res.json({ password: "Password reset successfully" });
+//     } else {
+//       throw new BadRequestError("Invalid or expired password reset token");
+//     }
+//   } catch (err) {
+//     return next(err);
+//   }
+// });

@@ -29,11 +29,20 @@
             "examples": [
                 "CO"
             ]
+        },
+        "postcode": {
+            "type": "string",
+            "default": "",
+            "title": "The state Schema",
+            "examples": [
+                "80235"
+            ]
         }
     },
     "examples": [{
         "name": "love dog shelter",
         "city": "breckednridge",
-        "state": "CO"
+        "state": "CO",
+        "postcode": "80235"
     }]
 }

@@ -2,7 +2,7 @@ const axios = require("axios");
 require("dotenv").config();
 const BASE_URL = "https://api.petfinder.com/v2";
 
-const getbreed = async () => {
+async function getBreeds() {
   const API_KEY = process.env.API_KEY;
   const SECRET = process.env.SECRET;
   const response = await axios.post(
@@ -14,14 +14,13 @@ const getbreed = async () => {
       },
     }
   );
-  const token = response.data.access_token;
+  const { access_token } = response.data;
 
   const breedResponse = await axios.get(`${BASE_URL}/types/dog/breeds`, {
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${access_token}`,
     },
   });
   const allBreeds = breedResponse.data.breeds;
   allBreeds.forEach((obj, ind) => console.log(`(${ind + 1}, '${obj.name}')`));
-};
-
+}

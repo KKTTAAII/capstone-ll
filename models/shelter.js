@@ -47,7 +47,8 @@ class Shelter {
 
   /**Create and Register a shelter from data, update db, return new shelter data
    *
-   * data should be {username,
+   * data should be {id,
+   * username,
    * password,
    * name,
    * address,
@@ -118,7 +119,8 @@ class Shelter {
          description, 
          is_admin)
         VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
-        RETURNING username, 
+        RETURNING id,
+                username, 
                 name, 
                 address, 
                 city, 
@@ -156,12 +158,13 @@ class Shelter {
    * -name (will find case-insensitive parital matches)
    * -city
    * -state
-   * -email
+   * -postcode
    *
    * Returns [{username, name, email, phoneNumber, city, state, isAdmin}]
    */
   static async findAll(searchFilters = {}) {
-    let query = `SELECT username,
+    let query = `SELECT id, 
+                username,
                 name,
                 email,
                 phone_number AS "phoneNumber", 
@@ -173,7 +176,7 @@ class Shelter {
             FROM shelters`;
     let whereExpressions = [];
     let queryValues = [];
-    const { name, city, state, email } = searchFilters;
+    const { name, city, state, postcode } = searchFilters;
 
     if (name) {
       queryValues.push(`%${name}%`);
@@ -190,9 +193,9 @@ class Shelter {
       whereExpressions.push(`state ILIKE $${queryValues.length}`);
     }
 
-    if (email) {
-      queryValues.push(`%${email}%`);
-      whereExpressions.push(`email ILIKE $${queryValues.length}`);
+    if (postcode) {
+      queryValues.push(`%${postcode}%`);
+      whereExpressions.push(`postcode ILIKE $${queryValues.length}`);
     }
 
     if (whereExpressions.length > 0) {
@@ -208,7 +211,7 @@ class Shelter {
     return sheltersRes.rows;
   }
 
-  /** Given a shelter username, return data about shelter.
+  /** Given a shelter id, return data about shelter.
    *
    * Returns { id,
    * username,
@@ -229,7 +232,7 @@ class Shelter {
    *
    * Throws NotFoundError if not found.
    **/
-  static async get(username) {
+  static async get(id) {
     const shelterRes = await db.query(
       `SELECT  id,
                 username,
@@ -240,16 +243,17 @@ class Shelter {
                 state,
                 is_admin AS "isAdmin"
             FROM shelters
-            WHERE username = $1`,
-      [username]
+            WHERE id = $1`,
+      [id]
     );
 
     const shelter = shelterRes.rows[0];
 
-    if (!shelter) throw new NotFoundError(`No shelter: ${username}`);
+    if (!shelter) throw new NotFoundError(`No shelter: ${id}`);
 
     const adoptableDogsRes = await db.query(
-      `SELECT name,
+      `SELECT id,
+                name,
                 breed_id AS "breedId",
                 gender,
                 age,
@@ -257,7 +261,7 @@ class Shelter {
                 description
             FROM adoptable_dogs
             WHERE shelter_id = $1`,
-      [shelter.id]
+      [id]
     );
 
     shelter.adoptableDogs = adoptableDogsRes.rows;
@@ -293,9 +297,9 @@ class Shelter {
    *
    * Throws NotFoundError if not found.
    */
-  static async update(username, data) {
+  static async update(id, data) {
     const { setCols, values } = sqlForPartialUpdate(data, {
-      phonNumber: "phone_number",
+      phoneNumber: "phone_number",
       isAdmin: "is_admin",
     });
 
@@ -303,7 +307,7 @@ class Shelter {
 
     const querySql = `UPDATE shelters
                         SET ${setCols}
-                        WHERE username = ${handleVarIdx}
+                        WHERE id = ${handleVarIdx}
                         RETURNING username,
                                     name,
                                     address,
@@ -315,10 +319,10 @@ class Shelter {
                                     logo,
                                     description,
                                     is_admin AS "isAdmin"`;
-    const result = await db.query(querySql, [...values, username]);
+    const result = await db.query(querySql, [...values, id]);
     const shelter = result.rows[0];
 
-    if (!shelter) throw new NotFoundError(`No shelter: ${username}`);
+    if (!shelter) throw new NotFoundError(`No shelter: ${id}`);
 
     return shelter;
   }
@@ -327,19 +331,19 @@ class Shelter {
    *
    * throws NotFoundError if shelter not found
    */
-  static async remove(username) {
+  static async remove(id) {
     const result = await db.query(
       `DELETE 
              FROM shelters
-             WHERE username = $1
+             WHERE id = $1
              RETURNING username`,
-      [username]
+      [id]
     );
 
     const shelter = result.rows[0];
 
     if (!shelter) {
-      throw new NotFoundError(`No shelter: ${username}`);
+      throw new NotFoundError(`No shelter: ${id}`);
     }
 
     return { delete: "Shelter Deleted" };
@@ -349,26 +353,26 @@ class Shelter {
    *
    * return {updated: password was updated}
    */
-  static async updatePassword(username, password) {
+  static async updatePassword(id, password) {
     const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
 
     const result = await db.query(
       `SELECT username, password, name, email, is_admin AS "isAdmin"
         FROM shelters
-        WHERE username = $1`,
-      [username]
+        WHERE id = $1`,
+      [id]
     );
 
     const shelter = result.rows[0];
 
-    if (!shelter) throw new NotFoundError(`No shelter: ${username}`);
+    if (!shelter) throw new NotFoundError(`No shelter: ${id}`);
 
     const updatePasswordRes = await db.query(
       `UPDATE shelters
                         SET password = $1
-                        WHERE username = $2
+                        WHERE id = $2
                         RETURNING username`,
-      [hashedPassword, username]
+      [hashedPassword, id]
     );
 
     const response = updatePasswordRes.rows[0];

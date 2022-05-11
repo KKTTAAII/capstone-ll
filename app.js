@@ -22,7 +22,6 @@ app.use(authenticateJWT);
 app.use(/\/((?!forgotPassword).)*/, authenticateJWT);
 app.use(/\/((?!resetForgotPassword).)*/, authenticateJWT);
 
-
 app.use("/authShelter", authShelterRoutes);
 app.use("/authAdopter", authAdopterRoutes);
 app.use("/shelters", sheltersRoutes);

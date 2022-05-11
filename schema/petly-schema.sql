@@ -22,7 +22,6 @@ CREATE TABLE "adoptable_dogs" (
     "age" text NOT NULL,
     "picture" text NOT NULL,
     "description" text NULL,
-    "days_at_shelter" int NULL,
     "good_w_kids" boolean NULL,
     "good_w_dogs" boolean NULL,
     "good_w_cats" boolean NULL,

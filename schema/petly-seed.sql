@@ -288,25 +288,23 @@ VALUES (1, 'Affenpinscher'),
 (274, 'Yellow Labrador Retriever'),
 (275, 'Yorkshire Terrier');
 
-INSERT INTO adoptable_dogs (name, breed_id, gender, age, picture, description, days_at_shelter, good_w_kids, good_w_dogs, good_w_cats, shelter_id)
+INSERT INTO adoptable_dogs (name, breed_id, gender, age, picture, description, good_w_kids, good_w_dogs, good_w_cats, shelter_id)
 VALUES ('Choco', 130, 'Male', 'Young', 'https:\/\/dl5zpyw5k3jeb.cloudfront.net\/photos\/pets\/55194486\/1\/?bust=1648996693&width=100', 
-'Hi there!!  My name is Choco and I am a 1 year old, Husky X.  I am already a big...', null, true, true, null, 1),
+'Hi there!!  My name is Choco and I am a 1 year old, Husky X.  I am already a big...', true, true, null, 1),
 ('Blue', 43, 'Female', 'Young', 'https:\/\/dl5zpyw5k3jeb.cloudfront.net\/photos\/pets\/55002797\/1\/?bust=1647468675&width=100', 
-'My name is Blue and I am looking for a home where I can be the only dog.  I am...', null, null, null, null, 1),
+'My name is Blue and I am looking for a home where I can be the only dog.  I am...', null, null, null, 1),
 ('Mocha', 252, 'Male', 'Young', 'https:\/\/dl5zpyw5k3jeb.cloudfront.net\/photos\/pets\/54511989\/1\/?bust=1643991592&width=100', 
-'This is Mocha.  He is about an 8 month old, Terrier cross.  Mocha, like his siblings Titi and Lita, have...', null, null, true, null, 1),
+'This is Mocha.  He is about an 8 month old, Terrier cross.  Mocha, like his siblings Titi and Lita, have...', null, true, null, 1),
 ('Marshmallow', 229, 'Female', 'Baby', 'https:\/\/dl5zpyw5k3jeb.cloudfront.net\/photos\/pets\/55005777\/1\/?bust=1647481481&width=100', 
-'Say hello to Marshmallow! This sweet girl was born in our rescue after her mother was surrendered as a stray....', null, true, true, null, 2),
+'Say hello to Marshmallow! This sweet girl was born in our rescue after her mother was surrendered as a stray....', true, true, null, 2),
 ('German Shepherd Mix PUPPIES!!!', 112, 'Female', 'Baby', 'https:\/\/dl5zpyw5k3jeb.cloudfront.net\/photos\/pets\/55005728\/1\/?bust=1647480729&width=100', 
-'Our rescue was alerted to a sweet, young, female German Shepherd that was lying on the side of a county...', null, true, true, true, 2),
+'Our rescue was alerted to a sweet, young, female German Shepherd that was lying on the side of a county...', true, true, true, 2),
 ('German Shepherd Mix PUPPIES!!!', 112, 'Male', 'Baby', 'https:\/\/dl5zpyw5k3jeb.cloudfront.net\/photos\/pets\/55005722\/1\/?bust=1647480499&width=100', 
-'Our rescue was alerted to a sweet, young, female German Shepherd that was lying on the side of a county...', null, true, true, true, 2),
-('Chief', 28, 'Male', 'Adult', 'https://thumbs.dreamstime.com/z/avatar-dog-avatar-dog-white-background-vector-illustration-105121614.jpg', 
-null, null, null, null, null, 3),
-('Hope', 128, 'Female', 'Adult', 'https://thumbs.dreamstime.com/z/avatar-dog-avatar-dog-white-background-vector-illustration-105121614.jpg', 
-null, null, null, null, null, 3),
+'Our rescue was alerted to a sweet, young, female German Shepherd that was lying on the side of a county...', true, true, true, 2),
+('Chief', 28, 'Male', 'Adult', 'https://thumbs.dreamstime.com/z/avatar-dog-avatar-dog-white-background-vector-illustration-105121614.jpg', null, null, null, null, 3),
+('Hope', 128, 'Female', 'Adult', 'https://thumbs.dreamstime.com/z/avatar-dog-avatar-dog-white-background-vector-illustration-105121614.jpg', null, null, null, null, 3),
 ('Alfie', 23, 'Male', 'Young', 'https:\/\/dl5zpyw5k3jeb.cloudfront.net\/photos\/pets\/55367212\/1\/?bust=1650641371&width=100', 
-'Meet Alfie! Alfie is a 28 lb, one year old Beagle found as a stray in a creek. He has...', null, null, true, null, 3);
+'Meet Alfie! Alfie is a 28 lb, one year old Beagle found as a stray in a creek. He has...', null, true, null, 3);
 
 INSERT INTO adopters (username, password, email, description, private_outdoors, num_of_dogs, preferred_gender, preferred_age)
 VALUES ('nhawker0', 'yrnwI0KK', 'hfjuhb@gmail.com','morph revolutionary niches', false, 1, 'Female', 'Young'),

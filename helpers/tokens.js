@@ -12,6 +12,7 @@ function createToken(user, expiration = {}) {
   let payload = {
     username: user.username,
     isAdmin: user.isAdmin || false,
+    id: user.id,
   };
 
   return jwt.sign(payload, SECRET_KEY, expiration);
