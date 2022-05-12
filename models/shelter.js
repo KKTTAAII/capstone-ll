@@ -25,7 +25,7 @@ class Shelter {
   static async authenticate(username, password) {
     //try to find the shelter user first
     const result = await db.query(
-      `SELECT username, password, name, email, is_admin AS "isAdmin"
+      `SELECT id, username, password, name, email, is_admin AS "isAdmin"
         FROM shelters
         WHERE username = $1`,
       [username]
@@ -261,7 +261,7 @@ class Shelter {
                 description
             FROM adoptable_dogs
             WHERE shelter_id = $1`,
-      [id]
+      [shelter.id]
     );
 
     shelter.adoptableDogs = adoptableDogsRes.rows;

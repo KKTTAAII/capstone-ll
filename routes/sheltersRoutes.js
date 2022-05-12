@@ -104,7 +104,7 @@ router.post("/", ensureAdmin, async (req, res, next) => {
  * Authorization required: correctuser or admin
  */
 
-router.patch("/:id", ensureCorrectUserOrAdmin, async function (req, res, next) {
+router.patch("/:id", ensureCorrectUserOrAdmin, async (req, res, next) => {
   try {
     const validator = jsonschema.validate(req.body, shelterUpdateSchema);
     if (!validator.valid) {
@@ -163,6 +163,28 @@ router.post("/contactShelter/:id", ensureLoggedIn, async (req, res, next) => {
   }
 });
 
+/**PATH UPDATE PASSWORD /[username] =>  { updatedPassword: response }
+ *
+ * Authorization: correctUser or admin
+ */
+router.patch(
+  "/resetPassword/:id",
+  ensureCorrectUserOrAdmin,
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const { password } = req.body;
+      if (!password) {
+        throw new BadRequestError(errs);
+      }
+      const response = await Shelter.updatePassword(id, password);
+      return res.json(response);
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
 module.exports = router;
 
 //version 2.0
@@ -170,28 +192,6 @@ module.exports = router;
 // const { SECRET_KEY } = require("../config");
 // const { createToken } = require("../helpers/tokens");
 // const sendResetPasswordEmail = require("../utils/sendResetPasswordEmail");
-
-// /**PATH UPDATE PASSWORD /[username] =>  { updatedPassword: response }
-//  *
-//  * Authorization: correctUser or admin
-//  */
-//  router.patch(
-//   "/resetPassword/:username",
-//   ensureCorrectUserOrAdmin,
-//   async (req, res, next) => {
-//     try {
-//       const { username } = req.params;
-//       const { password } = req.body;
-//       if (!password) {
-//         throw new BadRequestError(errs);
-//       }
-//       const response = await Shelter.updatePassword(username, password);
-//       return res.json(response);
-//     } catch (err) {
-//       return next(err);
-//     }
-//   }
-// );
 
 // /**POST Forgot Password => email the user to reset password */
 // router.post("/forgotPassword", async (req, res, next) => {

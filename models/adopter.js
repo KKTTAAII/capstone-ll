@@ -23,7 +23,7 @@ class Adopter {
   static async authenticate(username, password) {
     //try to find the adopter user first
     const result = await db.query(
-      `SELECT username, password, email, is_admin AS "isAdmin"
+      `SELECT id, username, password, email, is_admin AS "isAdmin"
         FROM adopters
         WHERE username = $1`,
       [username]

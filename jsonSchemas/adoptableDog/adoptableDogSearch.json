@@ -15,11 +15,11 @@
             ]
         },
         "breedId": {
-            "type": "integer",
+            "type": "string",
             "default": 0,
             "title": "The breedId Schema",
             "examples": [
-                130
+                "130"
             ]
         },
         "gender": {
@@ -39,37 +39,37 @@
             ]
         },
         "goodWKids": {
-            "type": "boolean",
-            "default": false,
+            "type": "string",
+            "default": "no",
             "title": "The goodWKids Schema",
             "examples": [
-                true
+                "yes"
             ]
         },
         "goodWDogs": {
-            "type": "boolean",
-            "default": false,
+            "type": "string",
+            "default": "no",
             "title": "The goodWDogs Schema",
             "examples": [
-                true
+                "yes"
             ]
         },
         "goodWCats": {
-            "type": "boolean",
-            "default": false,
+            "type": "string",
+            "default": "no",
             "title": "The goodWCats Schema",
             "examples": [
-                false
+                "yes"
             ]
         }
     },
     "examples": [{
         "name": "Coco",
-        "breedId": 130,
+        "breedId": "130",
         "gender": "Male",
         "age": "Adult",
-        "goodWKids": true,
-        "goodWDogs": true,
-        "goodWCats": false
+        "goodWKids": "yes",
+        "goodWDogs": "yes",
+        "goodWCats": "no"
     }]
 }

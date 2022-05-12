@@ -7,7 +7,7 @@ const DEFAULT_PIC = "../assets/dog.png";
 // "https://www.templateupdates.com/wp-content/uploads/2018/03/Cute-Dog-Icon-Set-Template.jpg";
 /**DEFAULT PIC credit: <a href="https://www.flaticon.com/free-icons/dog" title="dog icons">Dog icons created by Flat Icons - Flaticon</a> */
 
-class Adoptable_dog {
+class AdoptableDog {
   /**Create an adoptable_dog, update db, return new adoptable_dog data
    *
    * data should be {name,
@@ -16,7 +16,6 @@ class Adoptable_dog {
    * age,
    * picture,
    * description,
-   * daysAtShelter,
    * goodWKids,
    * goodWDogs,
    * goodWCcats,
@@ -28,7 +27,6 @@ class Adoptable_dog {
    * age,
    * picture,
    * description,
-   * daysAtShelter,
    * goodWKids,
    * goodWDogs,
    * goodWCcats,
@@ -44,7 +42,6 @@ class Adoptable_dog {
     age,
     picture = DEFAULT_PIC,
     description,
-    daysAtShelter,
     goodWKids,
     goodWDogs,
     goodWCats,
@@ -58,19 +55,18 @@ class Adoptable_dog {
             age, 
             picture, 
             description, 
-            days_at_shelter, 
             good_w_kids, 
             good_w_dogs, 
             good_w_cats, 
             shelter_id)
         VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-        RETURNING name, 
+        RETURNING id,
+                    name, 
                     breed_id AS "breedId", 
                     gender, 
                     age, 
                     picture, 
-                    description, 
-                    days_at_shelter AS "daysAtShelter", 
+                    description,  
                     good_w_kids AS "goodWKids", 
                     good_w_dogs AS "goodWDogs", 
                     good_w_cats AS "goodWCats", 
@@ -82,7 +78,6 @@ class Adoptable_dog {
         age,
         picture,
         description,
-        daysAtShelter,
         goodWKids,
         goodWDogs,
         goodWCats,
@@ -106,48 +101,48 @@ class Adoptable_dog {
    * -goodWDogs
    * -goodWCats
    *
-   * Returns [{name,
+   * Returns [{id,
+   * name,
    * breedId,
    * gender,
    * age,
    * picture,
    * description,
-   * daysAtShelter,
    * goodWKids,
    * goodWDogs,
    * goodWCcats,
    * shelterId}]
    */
   static async findAll(searchFilters = {}) {
-    let query = `SELECT a.name,
+    let query = `SELECT a.id,
+                        a.name,
                         a.gender, 
                         a.age, 
                         a.picture, 
                         a.description, 
-                        a.days_at_shelter AS "daysAtShelter", 
                         a.good_w_kids AS "goodWKids", 
                         a.good_w_dogs AS "goodWDogs", 
                         a.good_w_cats AS "goodWCats", 
-                        s.name,
+                        s.id AS "shelterId",
                         b.breed
-                    FROM adoptable_dogs
+                    FROM adoptable_dogs a
                     JOIN shelters s
                     ON s.id = a.shelter_id
                     JOIN breed b
                     ON b.id = a.breed_id`;
     let whereExpressions = [];
     let queryValues = [];
-    const { name, breedId, gender, age, goodWKids, goodWDogs, goodWCats } =
+    let { name, breedId, gender, age, goodWKids, goodWDogs, goodWCats } =
       searchFilters;
 
     if (name) {
       queryValues.push(`%${name}%`);
-      whereExpressions.push(`name ILIKE $${queryValues.length}`);
+      whereExpressions.push(`a.name ILIKE $${queryValues.length}`);
     }
 
     if (breedId) {
-      queryValues.push(`%${breedId}%`);
-      whereExpressions.push(`breed_id ILIKE $${queryValues.length}`);
+      queryValues.push(`${breedId}`);
+      whereExpressions.push(`b.id = $${queryValues.length}`);
     }
 
     if (gender) {
@@ -161,18 +156,21 @@ class Adoptable_dog {
     }
 
     if (goodWKids) {
-      queryValues.push(`%${goodWKids}%`);
-      whereExpressions.push(`good_w_kids ILIKE $${queryValues.length}`);
+      goodWKids = goodWKids === "yes" ? true : false;
+      queryValues.push(`${goodWKids}`);
+      whereExpressions.push(`good_w_kids = $${queryValues.length}`);
     }
 
     if (goodWDogs) {
-      queryValues.push(`%${goodWDogs}%`);
-      whereExpressions.push(`good_w_dogs ILIKE $${queryValues.length}`);
+      goodWDogs = goodWDogs === "yes" ? true : false;
+      queryValues.push(`${goodWDogs}`);
+      whereExpressions.push(`good_w_dogs = $${queryValues.length}`);
     }
 
     if (goodWCats) {
-      queryValues.push(`%${goodWCats}%`);
-      whereExpressions.push(`good_w_cats ILIKE $${queryValues.length}`);
+      goodWCats = goodWCats === "yes" ? true : false;
+      queryValues.push(`${goodWCats}`);
+      whereExpressions.push(`good_w_cats = $${queryValues.length}`);
     }
 
     if (whereExpressions.length > 0) {
@@ -186,13 +184,13 @@ class Adoptable_dog {
 
   /** Given a dog id.
    *
-   * Returns { name,
+   * Returns { id,
+   * name,
    * breedId,
    * gender,
    * age,
    * picture,
    * description,
-   * daysAtShelter,
    * goodWKids,
    * goodWDogs,
    * goodWCcats,
@@ -204,33 +202,39 @@ class Adoptable_dog {
    **/
   static async get(id) {
     const adoptable_dogRes = await db.query(
-      `SELECT  name, 
-                breed_id AS "breedId", 
-                gender, 
-                age, 
-                picture, 
-                description, 
-                days_at_shelter AS "daysAtShelter", 
-                good_w_kids AS "goodWKids", 
-                good_w_dogs AS "goodWDogs", 
-                good_w_cats AS "goodWCats", 
-                shelter_id AS "shelterId"
-            FROM adoptable_dogs
-            WHERE id = $1`,
+      `SELECT  a.id,
+                a.name, 
+                b.breed, 
+                a.gender, 
+                a.age, 
+                a.picture, 
+                a.description, 
+                a.good_w_kids AS "goodWKids", 
+                a.good_w_dogs AS "goodWDogs", 
+                a.good_w_cats AS "goodWCats",
+                a.shelter_id AS "shelterId"
+            FROM adoptable_dogs a
+            JOIN breed b
+            ON b.id = a.breed_id
+            WHERE a.id = $1`,
       [id]
     );
 
     const adoptable_dog = adoptable_dogRes.rows[0];
 
-    if (!adoptable_dog) throw new NotFoundError(`No adoptable dog id: ${id}`);
+    if (!adoptable_dog) return null;
 
     const shelterRes = await db.query(
-      `SELECT username,
+      `SELECT id,
                 name,
+                address,
                 city,
                 state,
+                postcode,
+                phone_number AS "phoneNumber",
                 email,
-                phone_number AS "phoneNumber"
+                logo,
+                description
             FROM shelters
             WHERE id = $1`,
       [adoptable_dog.shelterId]
@@ -252,7 +256,6 @@ class Adoptable_dog {
    * age,
    * picture,
    * description,
-   * daysAtShelter,
    * goodWKids,
    * goodWDogs,
    * goodWCats}
@@ -263,7 +266,6 @@ class Adoptable_dog {
    * age,
    * picture,
    * description,
-   * daysAtShelter,
    * goodWKids,
    * goodWDogs,
    * goodWCats}
@@ -274,7 +276,6 @@ class Adoptable_dog {
   static async update(id, data) {
     const { setCols, values } = sqlForPartialUpdate(data, {
       breedId: "breed_id",
-      daysAtShelter: "days_at_shelter",
       goodWKids: "good_w_kids",
       goodWDogs: "good_w_dogs",
       goodWCats: "good_w_cats",
@@ -291,7 +292,6 @@ class Adoptable_dog {
                                     age, 
                                     picture, 
                                     description, 
-                                    daysAtShelter,
                                     goodWKids,
                                     goodWDogs,
                                     goodWCats`;
@@ -324,4 +324,4 @@ class Adoptable_dog {
   }
 }
 
-module.exports = Adoptable_dog;
+module.exports = AdoptableDog;

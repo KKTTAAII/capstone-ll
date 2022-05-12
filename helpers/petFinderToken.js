@@ -18,7 +18,7 @@ async function getPetfinderToken() {
     const { access_token } = response.data;
     return access_token;
   } catch (err) {
-    console.log(er);
+    console.log(err);
     return err;
   }
 }
