@@ -258,7 +258,10 @@ class Shelter {
                 gender,
                 age,
                 picture,
-                description
+                description,
+                good_w_kids AS "goodWKids",
+                good_w_dogs AS "goodWDogs",
+                good_w_cats AS "goodWCats"
             FROM adoptable_dogs
             WHERE shelter_id = $1`,
       [shelter.id]

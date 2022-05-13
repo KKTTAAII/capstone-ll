@@ -308,7 +308,7 @@ class Adopter {
 
   /**Delete given adopter from db; return 'deleted'
    *
-   * throws NotFoundError if adopter not found
+   * Throws NotFoundError if adopter not found
    */
   static async remove(username) {
     const result = await db.query(
@@ -326,7 +326,34 @@ class Adopter {
     return { delete: "Adopter Deleted" };
   }
 
-  /**Like/Fav a dog. Add to fav_dogs table */
+  /**Get all favortie dogs from db.
+   *
+   * Throws NotFoundError if adopter not found
+   */
+  static async getFavorites(username) {
+    const result = await db.query(
+      `SELECT id, username, password, email, is_admin AS "isAdmin"
+        FROM adopters
+        WHERE username = $1`,
+      [username]
+    );
+
+    const adopter = result.rows[0];
+
+    if (!adopter) throw new NotFoundError(`No adopter: ${username}`);
+
+    const favoriteDogsResponse = await db.query(
+      `SELECT * FROM fav_dogs 
+                WHERE adopters_id = $1`,
+      [adopter.id]
+    );
+
+    const favoriteDogs = favoriteDogsResponse.rows;
+
+    return favoriteDogs;
+  }
+
+  /**Like/Favorite a dog. Add to fav_dogs table */
   static async favorite(adoptablePetsId, username) {
     const adopterRes = await db.query(
       `SELECT username, id
@@ -336,6 +363,15 @@ class Adopter {
     );
 
     const adopter = adopterRes.rows[0];
+
+    const duplicateCheck = await db.query(
+      `SELECT * FROM fav_dogs
+                WHERE adopters_id = $1 AND adoptable_pets_id = $2`,
+
+      [adopter.id, adoptablePetsId]
+    );
+
+    if (duplicateCheck.rows[0]) throw new BadRequestError(`Duplicate favorite`);
 
     if (!adopter) throw new NotFoundError(`No adopter: ${username}`);
 
@@ -353,8 +389,8 @@ class Adopter {
     return favDog;
   }
 
-  /**Unfavorite fav_dog. Delete it from the database */
-  static async unFavorite(adoptable_pets_id, username) {
+  /**Unfavorite a dog. Delete it from the database */
+  static async unFavorite(adoptablePetsId, username) {
     const adopterRes = await db.query(
       `SELECT username, id
             FROM adopters
@@ -371,14 +407,14 @@ class Adopter {
              FROM fav_dogs
              WHERE adopters_id = $1 AND adoptable_pets_id = $2
              RETURNING adoptable_pets_id`,
-      [adopter.id, adoptable_pets_id]
+      [adopter.id, adoptablePetsId]
     );
 
     const fav_dog = fav_dogRes.rows[0];
 
     if (!fav_dog)
       throw new NotFoundError(
-        `No favorited dog with that dog id ${adoptable_pets_id} and username ${username}`
+        `No favorited dog with that dog id ${adoptablePetsId} and username ${username}`
       );
 
     return { delete: "Favorite Dog Deleted" };

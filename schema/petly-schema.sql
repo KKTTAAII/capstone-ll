@@ -62,5 +62,3 @@ REFERENCES "shelters" ("id") ON DELETE CASCADE;
 ALTER TABLE "fav_dogs" ADD CONSTRAINT "fk_fav_dogs_adopters_id" FOREIGN KEY("adopters_id")
 REFERENCES "adopters" ("id") ON DELETE CASCADE;
 
-ALTER TABLE "fav_dogs" ADD CONSTRAINT "fk_fav_dogs_adoptable_pets_id" FOREIGN KEY("adoptable_pets_id")
-REFERENCES "adoptable_dogs" ("id") ON DELETE CASCADE;

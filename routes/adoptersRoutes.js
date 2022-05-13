@@ -14,6 +14,7 @@ const {
 } = require("../middleware/auth");
 const adopterSearchSchema = require("../jsonSchemas/adopter/adopterSearch.json");
 const adopterUpdateSchema = require("../jsonSchemas/adopter/adopterUpdate.json");
+const getFavoritesDogsInfo = require("../helpers/getFavoriteDogs");
 
 const router = new express.Router();
 
@@ -155,11 +156,11 @@ router.patch(
 
 /**POST favorite a dog /[adoptablePetsId] => {favDog}
  *
- * Authorization: correctUser or admin
+ * Authorization: Logged in
  */
 router.post(
-  "/favDog/:adoptablePetsId",
-  ensureCorrectAdopterOrAdmin,
+  "/favoriteDog/:adoptablePetsId",
+  ensureLoggedIn,
   async (req, res, next) => {
     try {
       const user = res.locals.user.username;
@@ -172,13 +173,35 @@ router.post(
   }
 );
 
-/**DELETE favorite dog or unfavorite dog /[adoptablePetsId] => {favDog}{ delete: "Favorite Dog Deleted" }*
+/**GET favorite dogs /[username] => [{favDog},...]
  *
  * Authorization: correctUser or admin
  */
-router.delete(
-  "/unfavDog/:adoptablePetsId",
+router.get(
+  "/favoriteDogs/:username",
   ensureCorrectAdopterOrAdmin,
+  async (req, res, next) => {
+    try {
+      const { username } = req.params;
+      const favoriteDogsResponse = await Adopter.getFavorites(username);
+      const allFavoriteDogsIds = favoriteDogsResponse.map(
+        obj => obj.adoptable_pets_id
+      );
+      const favoriteDogs = await getFavoritesDogsInfo(allFavoriteDogsIds);
+      return res.json({ favoriteDogs });
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
+/**DELETE favorite dog or unfavorite dog /[adoptablePetsId] => {favDog}{ delete: "Favorite Dog Deleted" }*
+ *
+ * Authorization: Logged in
+ */
+router.delete(
+  "/unfavoriteDog/:adoptablePetsId",
+  ensureLoggedIn,
   async (req, res, next) => {
     try {
       const user = res.locals.user.username;

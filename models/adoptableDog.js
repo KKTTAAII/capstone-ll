@@ -21,7 +21,8 @@ class AdoptableDog {
    * goodWCcats,
    * shelterId}
    *
-   * returns {name,
+   * returns {id,
+   * name,
    * breed_id,
    * gender,
    * age,
@@ -41,10 +42,10 @@ class AdoptableDog {
     gender,
     age,
     picture = DEFAULT_PIC,
-    description,
-    goodWKids,
-    goodWDogs,
-    goodWCats,
+    description = "",
+    goodWKids = false,
+    goodWDogs = false,
+    goodWCats = false,
     shelterId,
   }) {
     const result = await db.query(
@@ -59,7 +60,7 @@ class AdoptableDog {
             good_w_dogs, 
             good_w_cats, 
             shelter_id)
-        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
         RETURNING id,
                     name, 
                     breed_id AS "breedId", 
@@ -260,7 +261,8 @@ class AdoptableDog {
    * goodWDogs,
    * goodWCats}
    *
-   * Returns {name,
+   * Returns {id,
+   * name,
    * breed_id,
    * gender,
    * age,
@@ -286,15 +288,16 @@ class AdoptableDog {
     const querySql = `UPDATE adoptable_dogs
                         SET ${setCols}
                         WHERE id = ${handleVarIdx}
-                        RETURNING name, 
+                        RETURNING id,
+                                    name, 
                                     breed_id, 
                                     gender, 
                                     age, 
                                     picture, 
                                     description, 
-                                    goodWKids,
-                                    goodWDogs,
-                                    goodWCats`;
+                                    good_w_kids AS "goodWKids",
+                                    good_w_dogs AS "goodWDogs",
+                                    good_w_cats AS "goodWCats"`;
     const result = await db.query(querySql, [...values, id]);
     const adoptable_dog = result.rows[0];
 

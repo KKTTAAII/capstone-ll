@@ -138,8 +138,12 @@ async function getDog(dogId) {
       shelter: shelter,
     };
   } catch (err) {
-    console.log("ERROR", err);
-    return null;
+    console.log("ERROR", err.response.statusText);
+    if (err.response.statusText === "Not Found") {
+      return null;
+    } else {
+      throw new ExpressError(err.response.statusText, err.response.status);
+    }
   }
 }
 

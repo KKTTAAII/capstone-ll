@@ -8,8 +8,7 @@
         "name",
         "breedId",
         "gender",
-        "age",
-        "shelterId"
+        "age"
     ],
     "properties": {
         "name": {
@@ -91,14 +90,6 @@
             "examples": [
                 false
             ]
-        },
-        "shelterId": {
-            "type": "integer",
-            "default": 0,
-            "title": "The shelterId Schema",
-            "examples": [
-                5
-            ]
         }
     },
     "examples": [{
@@ -111,7 +102,6 @@
         "daysAtShelter": 5,
         "goodWKids": true,
         "goodWDogs": true,
-        "goodWCats": false,
-        "shelterId": 5
+        "goodWCats": false
     }]
 }
