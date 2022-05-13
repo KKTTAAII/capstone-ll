@@ -364,6 +364,8 @@ class Adopter {
 
     const adopter = adopterRes.rows[0];
 
+    if (!adopter) throw new NotFoundError(`No adopter: ${username}`);
+
     const duplicateCheck = await db.query(
       `SELECT * FROM fav_dogs
                 WHERE adopters_id = $1 AND adoptable_pets_id = $2`,
@@ -372,8 +374,6 @@ class Adopter {
     );
 
     if (duplicateCheck.rows[0]) throw new BadRequestError(`Duplicate favorite`);
-
-    if (!adopter) throw new NotFoundError(`No adopter: ${username}`);
 
     const favDogRes = await db.query(
       `INSERT INTO fav_dogs

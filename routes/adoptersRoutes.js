@@ -27,8 +27,8 @@ const router = new express.Router();
  * Authorization required: Logged in
  */
 router.get("/", ensureLoggedIn, async (req, res, next) => {
-  const query = req.query;
   try {
+    const query = req.query;
     const validator = jsonschema.validate(query, adopterSearchSchema);
     if (!validator.valid) {
       const errs = validator.errors.map(e => e.stack);
@@ -42,17 +42,17 @@ router.get("/", ensureLoggedIn, async (req, res, next) => {
   }
 });
 
-/** GET /[username]  =>  { adopter }
+/** GET /{req.params.username}  =>  { adopter }
  *
- *  adopter is { username, email, picture, description, privateOutdoors, numOfDogs, preferredGender, preferredAge, isAdmin }
+ *  adopter is { id, username, email, picture, description, privateOutdoors, numOfDogs, preferredGender, preferredAge, isAdmin }
  *   where favDogs is [{ name, breedId, gender, age, picture, description }, ...]
  *
  * Authorization required: Logged in
  */
 
 router.get("/:username", ensureLoggedIn, async (req, res, next) => {
-  const { username } = req.params;
   try {
+    const { username } = req.params;
     const adopter = await Adopter.get(username);
     return res.json({ adopter });
   } catch (err) {
@@ -65,14 +65,7 @@ router.get("/:username", ensureLoggedIn, async (req, res, next) => {
  * adopter should be {
  * username,
  * password,
- * email,
- * picture(optional),
- * description,
- * privateOutdoors,
- * numOfDogs,
- * preferredGender,
- * preferredAge,
- * isAdmin }
+ * email }
  *
  * Returns { username, email, picture, description, privateOutdoors, numOfDogs, preferredGender, preferredAge, isAdmin }
  *
@@ -87,7 +80,7 @@ router.post("/", ensureAdmin, async (req, res, next) => {
   }
 });
 
-/** PATCH /[username] { fld1, fld2, ... } => { adopter }
+/** PATCH /{req.params.username} { fld1, fld2, ... } => { adopter }
  *
  * Patches adopter data.
  *

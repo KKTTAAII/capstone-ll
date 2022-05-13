@@ -321,7 +321,7 @@ class AdoptableDog {
 
     const adoptable_dog = result.rows[0];
 
-    if (!adoptable_dog) throw new NotFoundError(`No shelter: ${id}`);
+    if (!adoptable_dog) throw new NotFoundError(`No adoptable dog id: ${id}`);
 
     return { delete: "Adoptable dog Deleted" };
   }

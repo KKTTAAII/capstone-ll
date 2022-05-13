@@ -166,12 +166,14 @@ class Shelter {
     let query = `SELECT id, 
                 username,
                 name,
-                email,
-                phone_number AS "phoneNumber", 
+                address,
                 city,
                 state,
+                postcode,
+                phone_number AS "phoneNumber", 
+                email,
+                logo,
                 description,
-                logo, 
                 is_admin AS "isAdmin"
             FROM shelters`;
     let whereExpressions = [];

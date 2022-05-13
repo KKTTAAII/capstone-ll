@@ -16,6 +16,7 @@ const adoptableDogUpdateSchema = require("../jsonSchemas/adoptableDog/adoptableD
 const newDogSchema = require("../jsonSchemas/adoptableDog/newAdoptableDog.json");
 const { getDogs, getDog } = require("../helpers/getDogs");
 const Shelter = require("../models/shelter");
+const ensureShelter = require("../helpers/ensureShelter");
 
 const router = new express.Router();
 
@@ -59,7 +60,7 @@ router.get("/", ensureLoggedIn, async (req, res, next) => {
   }
 });
 
-/** GET /[id]  =>  { adoptableDog }
+/** GET /{req.params.dogId}  =>  { adoptableDog }
  *
  *  adoptableDog is [{ id,
  * name,
@@ -77,12 +78,12 @@ router.get("/", ensureLoggedIn, async (req, res, next) => {
  * Authorization required: logged in
  */
 
-router.get("/:id", ensureLoggedIn, async (req, res, next) => {
-  const { id } = req.params;
+router.get("/:dogId", ensureLoggedIn, async (req, res, next) => {
+  const { dogId } = req.params;
   try {
     let adoptableDog = [];
-    let dbResponse = await AdoptableDog.get(+id);
-    let petFinderresponse = await getDog(+id);
+    let dbResponse = await AdoptableDog.get(+dogId);
+    let petFinderresponse = await getDog(+dogId);
     if (dbResponse !== null) {
       adoptableDog.push(dbResponse);
     }
@@ -104,16 +105,17 @@ router.get("/:id", ensureLoggedIn, async (req, res, next) => {
  *
  * Authorization required: correctUser or admin
  */
-router.post("/:id", ensureCorrectUserOrAdmin, async (req, res, next) => {
-  const query = req.body;
+router.post("/:userId", ensureCorrectUserOrAdmin, async (req, res, next) => {
   try {
+    const query = req.body;
     const validator = jsonschema.validate(query, newDogSchema);
     if (!validator.valid) {
       const errs = validator.errors.map(e => e.stack);
       throw new BadRequestError(errs);
     }
-    const { id } = req.params;
-    const shelter = await Shelter.get(id);
+    const { userId } = req.params;
+    await ensureShelter(req, res);
+    const shelter = await Shelter.get(userId);
     const newAdoptableDog = await AdoptableDog.create({
       ...query,
       shelterId: shelter.id,
@@ -124,7 +126,7 @@ router.post("/:id", ensureCorrectUserOrAdmin, async (req, res, next) => {
   }
 });
 
-/** PATCH /[id] { fld1, fld2, ... } => { adoptableDog }
+/** PATCH /{req.params.dogId} { fld1, fld2, ... } => { adoptableDog }
  *
  * Patches adoptableDog data.
  *
@@ -135,7 +137,7 @@ router.post("/:id", ensureCorrectUserOrAdmin, async (req, res, next) => {
  * Authorization required: correctuser or admin
  */
 router.patch(
-  "/:id/:dogId",
+  "/:userId/:dogId",
   ensureCorrectUserOrAdmin,
   async (req, res, next) => {
     try {
@@ -144,7 +146,7 @@ router.patch(
         const errs = validator.errors.map(e => e.stack);
         throw new BadRequestError(errs);
       }
-
+      await ensureShelter(req, res);
       const { dogId } = req.params;
       const adoptableDog = await AdoptableDog.update(dogId, req.body);
       return res.json({ adoptableDog });
@@ -158,14 +160,19 @@ router.patch(
  *
  * Authorization: correctUser or admin
  */
-router.delete("/:id/:dogId", ensureCorrectUserOrAdmin, async (req, res, next) => {
-  try {
-    const { dogId } = req.params;
-    const deleted = await AdoptableDog.remove(dogId);
-    return res.json(deleted);
-  } catch (err) {
-    return next(err);
+router.delete(
+  "/:userId/:dogId",
+  ensureCorrectUserOrAdmin,
+  async (req, res, next) => {
+    try {
+      await ensureShelter(req, res);
+      const { dogId } = req.params;
+      const deleted = await AdoptableDog.remove(dogId);
+      return res.json(deleted);
+    } catch (err) {
+      return next(err);
+    }
   }
-});
+);
 
 module.exports = router;
