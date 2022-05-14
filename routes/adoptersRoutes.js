@@ -159,7 +159,7 @@ router.post(
       const user = res.locals.user.username;
       const { adoptablePetsId } = req.params;
       const favDog = await Adopter.favorite(adoptablePetsId, user);
-      return res.json(favDog);
+      return res.json({ favDog });
     } catch (err) {
       return next(err);
     }
@@ -200,7 +200,7 @@ router.delete(
       const user = res.locals.user.username;
       const { adoptablePetsId } = req.params;
       const unFavDog = await Adopter.unFavorite(adoptablePetsId, user);
-      return res.json(unFavDog);
+      return res.json({ unFavDog });
     } catch (err) {
       return next(err);
     }
