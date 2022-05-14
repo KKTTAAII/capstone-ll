@@ -139,8 +139,8 @@ router.patch(
       if (!password) {
         throw new BadRequestError(errs);
       }
-      await Adopter.updatePassword(username, password);
-      return res.json({ password: "Password reset successfully" });
+      const response = await Adopter.updatePassword(username, password);
+      return res.json(response);
     } catch (err) {
       return next(err);
     }

@@ -446,7 +446,7 @@ class Adopter {
       [hashedPassword, username]
     );
 
-    const response = updatePasswordRes.rows[0];
+    return { updatePassword: "password update sucessfully" };
   }
 }
 

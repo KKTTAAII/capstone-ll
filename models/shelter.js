@@ -380,9 +380,7 @@ class Shelter {
       [hashedPassword, id]
     );
 
-    const response = updatePasswordRes.rows[0];
-
-    return { updatedPassword: response };
+    return { updatePassword: "password update sucessfully" };
   }
 }
 
