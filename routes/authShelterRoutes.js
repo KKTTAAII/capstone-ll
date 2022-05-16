@@ -29,6 +29,7 @@ router.post("/token", async (req, res, next) => {
 
     const { username, password } = req.body;
     const shelter = await Shelter.authenticate(username, password);
+    shelter.userType = "shelters"
     const token = createToken(shelter);
     return res.json({ token });
   } catch (err) {
@@ -54,6 +55,7 @@ router.post("/register", async (req, res, next) => {
     }
 
     const newShelter = await Shelter.register({ ...req.body, isAdmin: false });
+    newShelter.userType = "shelters";
     const token = createToken(newShelter);
     return res.status(201).json({ token });
   } catch (err) {

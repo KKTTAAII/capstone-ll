@@ -12,6 +12,7 @@ function createToken(user, expiration = {}) {
     username: user.username,
     isAdmin: user.isAdmin || false,
     id: user.id,
+    userType: user.userType,
   };
 
   return jwt.sign(payload, SECRET_KEY, expiration);

@@ -29,6 +29,7 @@ router.post("/token", async (req, res, next) => {
 
     const { username, password } = req.body;
     const adopter = await Adopter.authenticate(username, password);
+    adopter.userType = "adopters";
     const token = createToken(adopter);
     return res.json({ token });
   } catch (err) {
@@ -54,6 +55,7 @@ router.post("/register", async (req, res, next) => {
     }
 
     const newAdopter = await Adopter.register({ ...req.body, isAdmin: false });
+    newAdopter.userType = "adopters";
     const token = createToken(newAdopter);
     return res.status(201).json({ token });
   } catch (err) {
