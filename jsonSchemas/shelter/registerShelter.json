@@ -2,8 +2,6 @@
     "$schema": "http://json-schema.org/draft/2019-09/schema",
     "$id": "http://example.com/example.json",
     "type": "object",
-    "default": {},
-    "title": "Root Schema",
     "required": [
         "username",
         "password",
@@ -16,7 +14,6 @@
     "properties": {
         "username": {
             "type": "string",
-            "default": "",
             "title": "The username Schema",
             "examples": [
                 "kratai"
@@ -24,7 +21,6 @@
         },
         "password": {
             "type": "string",
-            "default": "",
             "title": "The password Schema",
             "examples": [
                 "bhdskjgnrekjn"
@@ -32,7 +28,6 @@
         },
         "name": {
             "type": "string",
-            "default": "",
             "title": "The name Schema",
             "examples": [
                 "dog lovers"
@@ -40,7 +35,6 @@
         },
         "address": {
             "type": "string",
-            "default": "",
             "title": "The address Schema",
             "examples": [
                 "303 overlook Dr."
@@ -48,7 +42,6 @@
         },
         "city": {
             "type": "string",
-            "default": "",
             "title": "The city Schema",
             "examples": [
                 "Breckenridge"
@@ -56,7 +49,6 @@
         },
         "state": {
             "type": "string",
-            "default": "",
             "title": "The state Schema",
             "examples": [
                 "CO"
@@ -64,7 +56,6 @@
         },
         "postcode": {
             "type": "string",
-            "default": "",
             "title": "The postcode Schema",
             "examples": [
                 "80424"
@@ -72,7 +63,6 @@
         },
         "phoneNumber": {
             "type": "string",
-            "default": "",
             "title": "The phoneNumber Schema",
             "examples": [
                 "028017562"
@@ -80,15 +70,13 @@
         },
         "email": {
             "type": "string",
-            "default": "",
-            "title": "The email Schema",
+            "format": "email",
             "examples": [
                 "kratai@gmail.com"
             ]
         },
         "logo": {
             "type": "string",
-            "default": "",
             "title": "The logo Schema",
             "examples": [
                 "https://cdn-icons-png.flaticon.com/512/3769/3769065.png"
@@ -96,7 +84,6 @@
         },
         "description": {
             "type": "string",
-            "default": "",
             "title": "The description Schema",
             "examples": [
                 "hello world"

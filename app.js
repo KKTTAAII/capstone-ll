@@ -2,7 +2,6 @@
 
 const express = require("express");
 const cors = require("cors");
-const morgan = require("morgan");
 
 const { NotFoundError } = require("./expressError");
 const { authenticateJWT } = require("./middleware/auth");
@@ -12,10 +11,12 @@ const sheltersRoutes = require("./routes/sheltersRoutes");
 const adoptersRoutes = require("./routes/adoptersRoutes");
 const adoptableDogsRoutes = require("./routes/adoptableDogsRoutes");
 
+const morgan = require("morgan");
+
 const app = express();
 
-app.use(cors());
 app.use(express.json());
+app.use(cors());
 app.use(morgan("tiny"));
 app.use(authenticateJWT);
 //exclude these routes because it's for reset password without having to log in

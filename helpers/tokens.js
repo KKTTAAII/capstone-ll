@@ -8,7 +8,6 @@ function createToken(user, expiration = {}) {
     user.isAdmin !== undefined,
     "createToken passed user without isAdmin property"
   );
-
   let payload = {
     username: user.username,
     isAdmin: user.isAdmin || false,
