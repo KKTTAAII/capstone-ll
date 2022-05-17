@@ -15,6 +15,7 @@ const morgan = require("morgan");
 
 const app = express();
 
+app.use("/assets", express.static("assets"));
 app.use(express.json());
 app.use(cors());
 app.use(morgan("tiny"));

@@ -180,7 +180,7 @@ class AdoptableDog {
 
     query += " ORDER BY s.name";
     const adoptable_dogsRes = await db.query(query, queryValues);
-    
+
     if (!adoptable_dogsRes.rows[0]) {
       console.log(`No shelters Found`);
       return;

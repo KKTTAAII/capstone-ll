@@ -4,6 +4,7 @@ const BASE_URL = "https://api.petfinder.com/v2";
 const getPetfinderToken = require("./petFinderToken");
 const getBreed = require("./getBreedName");
 const { getShelter } = require("./getShelters");
+const DEFAULT_PIC = "../assets/dog.png";
 
 /**Get adoptable dogs from petFinder API
  * user can filter by
@@ -81,7 +82,7 @@ async function getDogs(searchFilters = {}) {
         name,
         gender,
         age,
-        picture: photos[0] ? photos[0].medium : "",
+        picture: photos[0] ? photos[0].small : DEFAULT_PIC,
         description: description,
         goodWKids: environment.children,
         goodWDogs: environment.dogs,
@@ -128,7 +129,7 @@ async function getDog(dogId) {
       breed: breeds.primary,
       gender: gender,
       age: age,
-      picture: photos[0] ? photos[0].medium : "",
+      picture: photos[0] ? photos[0].small : DEFAULT_PIC,
       description: description,
       goodWKids: environment.children,
       goodWDogs: environment.dogs,

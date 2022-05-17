@@ -246,6 +246,8 @@ class Shelter {
                 phone_number AS "phoneNumber", 
                 city, 
                 state,
+                description,
+                logo,
                 is_admin AS "isAdmin"
             FROM shelters
             WHERE id = $1`,
