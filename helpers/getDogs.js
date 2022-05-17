@@ -2,9 +2,8 @@ const axios = require("axios");
 const { ExpressError } = require("../expressError");
 const BASE_URL = "https://api.petfinder.com/v2";
 const getPetfinderToken = require("./petFinderToken");
-const getBreed = require("./getBreedname");
+const getBreed = require("./getBreedName");
 const { getShelter } = require("./getShelters");
-const AdoptableDog = require("../models/adoptableDog");
 
 /**Get adoptable dogs from petFinder API
  * user can filter by
@@ -25,35 +24,35 @@ async function getDogs(searchFilters = {}) {
     let query = "";
 
     if (name) {
-      query = `&name=${name}`;
+      query += `&name=${name}`;
     }
     //gotta translate the id into breedName first
     if (breedId) {
       const breedName = await getBreed(+breedId);
-      query = `&breed=${breedName}`;
+      query += `&breed=${breedName}`;
     }
 
     if (gender) {
-      query = `&gender=${gender}`;
+      query += `&gender=${gender}`;
     }
 
     if (age) {
-      query = `&age=${age}`;
+      query += `&age=${age}`;
     }
 
     if (goodWKids) {
       goodWKids = goodWKids === "yes" ? true : false;
-      query = `&good_with_children=${goodWKids}`;
+      query += `&good_with_children=${goodWKids}`;
     }
 
     if (goodWDogs) {
       goodWDogs = goodWDogs === "yes" ? true : false;
-      query = `&good_with_dogs=${goodWDogs}`;
+      query += `&good_with_dogs=${goodWDogs}`;
     }
 
     if (goodWCats) {
       goodWCats = goodWCats === "yes" ? true : false;
-      query = `&good_with_cats=${goodWCats}`;
+      query += `&good_with_cats=${goodWCats}`;
     }
 
     const dogResponse = await axios.get(
@@ -78,10 +77,10 @@ async function getDogs(searchFilters = {}) {
         organization_id,
       } = dog;
       return {
-        id: id,
-        name: name,
-        gender: gender,
-        age: age,
+        id,
+        name,
+        gender,
+        age,
         picture: photos[0] ? photos[0].medium : "",
         description: description,
         goodWKids: environment.children,

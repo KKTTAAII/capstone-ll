@@ -5,13 +5,15 @@ const { UnauthorizedError } = require("../expressError");
  *
  * If not, raises Unauthorized.
  */
-async function ensureShelter(req, res) {
+async function isShelter(req, res) {
   const { userId } = req.params;
   const { username } = res.locals.user;
   const shelter = await Shelter.get(userId);
   if (username !== shelter.username) {
     throw new UnauthorizedError("unauthorized");
+  } else {
+    return true;
   }
 }
 
-module.exports = ensureShelter;
+module.exports = isShelter;

@@ -9,22 +9,34 @@ const getPetfinderToken = require("./petFinderToken");
  */
 async function getShelters(searchFilters = {}) {
   try {
+    console.log(searchFilters);
     const access_token = await getPetfinderToken();
-    const { name, city, state, postcode } = searchFilters;
+    const { name, state, postcode, city } = searchFilters;
     let query = "";
 
     if (name) {
-      query = `&name=${name}`;
+      query += `&name=${name}`;
+      console.log(1, query);
     }
+
     if (city) {
-      query = `&query=${city}`;
+      query += `&query=${city}`;
+      console.log(2, query);
     }
+
     if (state) {
-      query = `&state=${state}`;
+      query += `&state=${state}`;
+      console.log(3, query);
     }
     if (postcode) {
-      query = `&location=${postcode}`;
+      query += `&location=${postcode}`;
+      console.log(4, query);
     }
+
+    console.log(
+      "BASE URL***********",
+      `${BASE_URL}/organizations?limit=100${query}`
+    );
 
     const shelterResponse = await axios.get(
       `${BASE_URL}/organizations?limit=100${query}`,
@@ -40,14 +52,14 @@ async function getShelters(searchFilters = {}) {
       const { id, name, address, phone, email, photos, mission_statement } =
         organization;
       return {
-        id: id,
-        name: name,
+        id,
+        name,
         address: address.address1,
         city: address.city,
         state: address.state,
         postode: address.postcode,
         phoneNumber: phone,
-        email: email,
+        email,
         logo: photos[0] ? photos[0].medium : "",
         description: mission_statement,
       };

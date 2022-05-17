@@ -39,10 +39,14 @@ router.get("/", ensureLoggedIn, async (req, res, next) => {
       const errs = validator.errors.map(e => e.stack);
       throw new BadRequestError(errs);
     }
+    const shelters = [];
     const petFinderShelters = await getShelters(query);
-    const shelters = await Shelter.findAll(query);
+    const foundShelters = await Shelter.findAll(query);
     if (petFinderShelters[0]) {
       shelters.push(...petFinderShelters);
+    }
+    if (foundShelters) {
+      shelters.push(...foundShelters);
     }
     return res.json({ shelters });
   } catch (err) {

@@ -7,8 +7,11 @@ async function getBreedName(id) {
             WHERE id = $1`,
     [id]
   );
-  const { breed } = response.rows[0];
-  return breed;
+  if (response.rows[0].breed) {
+    return breed;
+  } else {
+    return `Breed ${id} does not exist`;
+  }
 }
 
 module.exports = getBreedName;

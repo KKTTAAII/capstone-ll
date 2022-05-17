@@ -16,7 +16,7 @@ const adoptableDogUpdateSchema = require("../jsonSchemas/adoptableDog/adoptableD
 const newDogSchema = require("../jsonSchemas/adoptableDog/newAdoptableDog.json");
 const { getDogs, getDog } = require("../helpers/getDogs");
 const Shelter = require("../models/shelter");
-const ensureShelter = require("../helpers/ensureShelter");
+const isShelter = require("../helpers/isShelter");
 
 const router = new express.Router();
 
@@ -49,10 +49,14 @@ router.get("/", ensureLoggedIn, async (req, res, next) => {
       const errs = validator.errors.map(e => e.stack);
       throw new BadRequestError(errs);
     }
+    const adoptableDogs = [];
     const petFinderDogs = await getDogs(query);
-    const adoptableDogs = await AdoptableDog.findAll(query);
+    const foundAdoptableDogs = await AdoptableDog.findAll(query);
     if (petFinderDogs[0]) {
-      adoptableDogs.push(...petFinderDogs);
+      adoptableDogs.push(...petFinderShelters);
+    }
+    if (foundAdoptableDogs) {
+      adoptableDogs.push(...foundShelters);
     }
     return res.json({ adoptableDogs });
   } catch (err) {
@@ -114,7 +118,7 @@ router.post("/:userId", ensureCorrectUserOrAdmin, async (req, res, next) => {
       throw new BadRequestError(errs);
     }
     const { userId } = req.params;
-    await ensureShelter(req, res);
+    await isShelter(req, res);
     const shelter = await Shelter.get(userId);
     const newAdoptableDog = await AdoptableDog.create({
       ...query,
@@ -146,7 +150,7 @@ router.patch(
         const errs = validator.errors.map(e => e.stack);
         throw new BadRequestError(errs);
       }
-      await ensureShelter(req, res);
+      await isShelter(req, res);
       const { dogId } = req.params;
       const adoptableDog = await AdoptableDog.update(dogId, req.body);
       return res.json({ adoptableDog });
@@ -165,7 +169,7 @@ router.delete(
   ensureCorrectUserOrAdmin,
   async (req, res, next) => {
     try {
-      await ensureShelter(req, res);
+      await isShelter(req, res);
       const { dogId } = req.params;
       const deleted = await AdoptableDog.remove(dogId);
       return res.json(deleted);
