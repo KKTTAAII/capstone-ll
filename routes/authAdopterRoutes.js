@@ -37,6 +37,26 @@ router.post("/token", async (req, res, next) => {
   }
 });
 
+/**GET /auth/authenticate: { username, password }
+ *
+ * Authorization required: none
+ */
+router.post("/authenticate", async (req, res, next) => {
+  try {
+    const validator = jsonschema.validate(req.body, userAuthSchema);
+    if (!validator.valid) {
+      const errs = validator.errors.map(e => e.stack);
+      throw new BadRequestError(errs);
+    }
+
+    const { username, password } = req.body;
+    const adopter = await Adopter.authenticate(username, password);
+    return res.json({ adopter });
+  } catch (err) {
+    return next(err);
+  }
+});
+
 /** POST /auth/register:   { user } => { token }
  *
  * user must include { username, password, name, city, state, phoneNumber, email }

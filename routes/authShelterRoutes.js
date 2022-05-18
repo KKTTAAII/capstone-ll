@@ -29,9 +29,29 @@ router.post("/token", async (req, res, next) => {
 
     const { username, password } = req.body;
     const shelter = await Shelter.authenticate(username, password);
-    shelter.userType = "shelters"
+    shelter.userType = "shelters";
     const token = createToken(shelter);
     return res.json({ token });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+/**GET /auth/authenticate: { username, password }
+ *
+ * Authorization required: none
+ */
+router.post("/authenticate", async (req, res, next) => {
+  try {
+    const validator = jsonschema.validate(req.body, userAuthSchema);
+    if (!validator.valid) {
+      const errs = validator.errors.map(e => e.stack);
+      throw new BadRequestError(errs);
+    }
+
+    const { username, password } = req.body;
+    const shelter = await Shelter.authenticate(username, password);
+    return res.json({ shelter });
   } catch (err) {
     return next(err);
   }
