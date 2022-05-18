@@ -71,7 +71,6 @@ router.get("/:userId", ensureLoggedIn, async (req, res, next) => {
     } else {
       shelter = await getShelter(userId);
     }
-
     return res.json({ shelter });
   } catch (err) {
     return next(err);

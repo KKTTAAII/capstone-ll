@@ -20,6 +20,7 @@
         },
         "adopterEmail": {
             "type": "string",
+            "format": "email",
             "default": "",
             "title": "The email Schema",
             "examples": [

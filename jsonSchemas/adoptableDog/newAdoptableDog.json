@@ -59,14 +59,6 @@
                 "I am a good dog"
             ]
         },
-        "daysAtShelter": {
-            "type": "integer",
-            "default": 0,
-            "title": "The daysAtShelter Schema",
-            "examples": [
-                5
-            ]
-        },
         "goodWKids": {
             "type": "boolean",
             "default": false,

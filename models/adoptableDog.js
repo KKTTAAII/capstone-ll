@@ -157,20 +157,20 @@ class AdoptableDog {
     }
 
     if (goodWKids) {
-      goodWKids = goodWKids === "yes" ? true : false;
-      queryValues.push(`${goodWKids}`);
+      const isgoodWKids = goodWKids === "yes" ? true : false;
+      queryValues.push(`${isgoodWKids}`);
       whereExpressions.push(`good_w_kids = $${queryValues.length}`);
     }
 
     if (goodWDogs) {
-      goodWDogs = goodWDogs === "yes" ? true : false;
-      queryValues.push(`${goodWDogs}`);
+      const isgoodWDogs = goodWDogs === "yes" ? true : false;
+      queryValues.push(`${isgoodWDogs}`);
       whereExpressions.push(`good_w_dogs = $${queryValues.length}`);
     }
 
     if (goodWCats) {
-      goodWCats = goodWCats === "yes" ? true : false;
-      queryValues.push(`${goodWCats}`);
+      const isgoodWCats = goodWCats === "yes" ? true : false;
+      queryValues.push(`${isgoodWCats}`);
       whereExpressions.push(`good_w_cats = $${queryValues.length}`);
     }
 

@@ -48,13 +48,22 @@ router.post("/token", async (req, res, next) => {
 
 router.post("/register", async (req, res, next) => {
   try {
+    //no mutating privateOutdoors to boolean, we create a new const for privateOutdoors
+    const isPrivateOutdoors = +req.body.privateOutdoors ? true : false;
+    delete req.body.privateOutdoors;
+    req.body.privateOutdoors = isPrivateOutdoors;
+
     const validator = jsonschema.validate(req.body, authAdopterSchema);
     if (!validator.valid) {
       const errs = validator.errors.map(e => e.stack);
       throw new BadRequestError(errs);
     }
 
-    const newAdopter = await Adopter.register({ ...req.body, isAdmin: false });
+    const newAdopter = await Adopter.register({
+      ...req.body,
+      privateOutdoors: isPrivateOutdoors,
+      isAdmin: false,
+    });
     newAdopter.userType = "adopters";
     const token = createToken(newAdopter);
     return res.status(201).json({ token });

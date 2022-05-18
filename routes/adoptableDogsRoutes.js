@@ -111,8 +111,17 @@ router.get("/:dogId", ensureLoggedIn, async (req, res, next) => {
  */
 router.post("/:userId", ensureCorrectUserOrAdmin, async (req, res, next) => {
   try {
-    const query = req.body;
-    const validator = jsonschema.validate(query, newDogSchema);
+    //no mutating data
+    const isGoodWCats = +req.body.goodWCats ? true : false;
+    const isGoodWDogs = +req.body.goodWDogs ? true : false;
+    const isGoodWKids = +req.body.goodWKids ? true : false;
+    delete req.body.goodWCats;
+    delete req.body.goodWDogs;
+    delete req.body.goodWKids;
+    req.body.goodWCats = isGoodWCats;
+    req.body.goodWDogs = isGoodWDogs;
+    req.body.goodWKids = isGoodWKids;
+    const validator = jsonschema.validate(req.body, newDogSchema);
     if (!validator.valid) {
       const errs = validator.errors.map(e => e.stack);
       throw new BadRequestError(errs);
@@ -121,7 +130,7 @@ router.post("/:userId", ensureCorrectUserOrAdmin, async (req, res, next) => {
     await isShelter(req, res);
     const shelter = await Shelter.get(userId);
     const newAdoptableDog = await AdoptableDog.create({
-      ...query,
+      ...req.body,
       shelterId: shelter.id,
     });
     return res.status(201).json({ newAdoptableDog });

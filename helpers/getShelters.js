@@ -31,7 +31,7 @@ async function getShelters(searchFilters = {}) {
     }
 
     const shelterResponse = await axios.get(
-      `${BASE_URL}/organizations?limit=100${query}`,
+      `${BASE_URL}/organizations?limit=3${query}`,
       {
         headers: {
           Authorization: `Bearer ${access_token}`,
@@ -100,6 +100,8 @@ async function getShelter(id) {
             picture: photos[0] ? photos[0].small : DEFAULT_PIC,
           };
         });
+      } else {
+        throw new NotFoundError(`no adoptable dogs`);
       }
 
       const { id, name, address, phone, email, photos, mission_statement } =
@@ -114,7 +116,7 @@ async function getShelter(id) {
         postode: address.postcode,
         phoneNumber: phone,
         email: email,
-        logo: photos[0] ? photos[0].medium : "",
+        logo: photos[0] ? photos[0].medium : DEFAULT_PIC,
         description: mission_statement,
         adoptableDogs: adoptableDogs,
       };
