@@ -96,13 +96,20 @@ router.patch(
   ensureCorrectAdopterOrAdmin,
   async (req, res, next) => {
     try {
+      //no data mutate
+      const isPrivateOutdoors = +req.body.privateOutdoors ? true : false;
+      delete req.body.privateOutdoors;
+      req.body.privateOutdoors = isPrivateOutdoors;
+      const dogNum = +req.body.numOfDogs;
+      delete req.body.numOfDogs;
+      req.body.numOfDogs = dogNum;
+      
       const validator = jsonschema.validate(req.body, adopterUpdateSchema);
       if (!validator.valid) {
         const errs = validator.errors.map(e => e.stack);
         throw new BadRequestError(errs);
       }
       const { username } = req.params;
-      console.log(username);
       const adopter = await Adopter.update(username, req.body);
       return res.json({ adopter });
     } catch (err) {

@@ -121,6 +121,10 @@ router.post("/:userId", ensureCorrectUserOrAdmin, async (req, res, next) => {
     req.body.goodWCats = isGoodWCats;
     req.body.goodWDogs = isGoodWDogs;
     req.body.goodWKids = isGoodWKids;
+    const breed = +req.body.breedId;
+    delete req.body.breedId;
+    req.body.breedId = breed;
+    
     const validator = jsonschema.validate(req.body, newDogSchema);
     if (!validator.valid) {
       const errs = validator.errors.map(e => e.stack);
@@ -164,6 +168,10 @@ router.patch(
       req.body.goodWCats = isGoodWCats;
       req.body.goodWDogs = isGoodWDogs;
       req.body.goodWKids = isGoodWKids;
+      const breed = +req.body.breedId;
+      delete req.body.breedId;
+      req.body.breedId = breed;
+
       const validator = jsonschema.validate(req.body, adoptableDogUpdateSchema);
       if (!validator.valid) {
         const errs = validator.errors.map(e => e.stack);

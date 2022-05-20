@@ -105,8 +105,6 @@ async function getShelter(id) {
             picture: photos[0] ? photos[0].small : DEFAULT_PIC,
           };
         });
-      } else {
-        throw new NotFoundError(`no adoptable dogs`);
       }
 
       const { id, name, address, phone, email, photos, mission_statement } =

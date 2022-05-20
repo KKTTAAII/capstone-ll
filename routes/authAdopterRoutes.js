@@ -9,7 +9,7 @@ const express = require("express");
 const router = new express.Router();
 const { createToken } = require("../helpers/tokens");
 const { BadRequestError } = require("../expressError");
-const userAuthScema = require("../jsonSchemas/userAuth.json");
+const userAuthSchema = require("../jsonSchemas/userAuth.json");
 const authAdopterSchema = require("../jsonSchemas/adopter/registerAdopter.json");
 
 /** POST /auth/token:  { username, password } => { token }
@@ -21,7 +21,7 @@ const authAdopterSchema = require("../jsonSchemas/adopter/registerAdopter.json")
 
 router.post("/token", async (req, res, next) => {
   try {
-    const validator = jsonschema.validate(req.body, userAuthScema);
+    const validator = jsonschema.validate(req.body, userAuthSchema);
     if (!validator.valid) {
       const errs = validator.errors.map(e => e.stack);
       throw new BadRequestError(errs);
@@ -72,6 +72,9 @@ router.post("/register", async (req, res, next) => {
     const isPrivateOutdoors = +req.body.privateOutdoors ? true : false;
     delete req.body.privateOutdoors;
     req.body.privateOutdoors = isPrivateOutdoors;
+    const dogNum = +req.body.numOfDogs;
+    delete req.body.numOfDogs;
+    req.body.numOfDogs = dogNum;
 
     const validator = jsonschema.validate(req.body, authAdopterSchema);
     if (!validator.valid) {

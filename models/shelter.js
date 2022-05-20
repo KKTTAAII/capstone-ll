@@ -387,7 +387,7 @@ class Shelter {
       [hashedPassword, id]
     );
 
-    return { updatePassword: "password update sucessfully" };
+    return { updatePassword: "Password updated sucessfully" };
   }
 }
 
