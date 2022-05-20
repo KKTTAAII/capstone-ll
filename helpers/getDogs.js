@@ -28,8 +28,9 @@ async function getDogs(searchFilters = {}) {
     if (name) {
       query += `&name=${name}`;
     }
-    //gotta translate the id into breedName first
+    
     if (breedId) {
+      //gotta translate the id into breedName first
       const breedName = await getBreed(+breedId);
       query += `&breed=${breedName}`;
     }
@@ -53,8 +54,7 @@ async function getDogs(searchFilters = {}) {
     if (goodWCats) {
       query += `&good_with_cats=${+goodWCats}`;
     }
-
-    console.log(`${BASE_URL}/animals?type=dog&limit=5${query}`)
+    
     const dogResponse = await axios.get(
       `${BASE_URL}/animals?type=dog&limit=5${query}`,
       {

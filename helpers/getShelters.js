@@ -10,7 +10,6 @@ const DEFAULT_PIC = "../assets/shelter.jpg";
  */
 async function getShelters(searchFilters = {}) {
   try {
-    console.log(searchFilters);
     const access_token = await getPetfinderToken();
     const { name, state, postcode, city } = searchFilters;
     let query = "";
