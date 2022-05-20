@@ -1,6 +1,6 @@
 const db = require("../db");
 
-async function getBreedName(id) {
+getBreedName = async id => {
   const response = await db.query(
     `SELECT breed 
             FROM breed
@@ -8,10 +8,10 @@ async function getBreedName(id) {
     [id]
   );
   if (response.rows[0].breed) {
-    return breed;
+    return response.rows[0].breed;
   } else {
     return `Breed ${id} does not exist`;
   }
-}
+};
 
 module.exports = getBreedName;

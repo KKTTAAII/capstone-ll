@@ -274,7 +274,9 @@ class Shelter {
       [shelter.id]
     );
 
-    shelter.adoptableDogs = adoptableDogsRes.rows;
+    adoptableDogsRes.rows[0]
+      ? (shelter.adoptableDogs = adoptableDogsRes.rows)
+      : (shelter.adoptableDogs = null);
 
     return shelter;
   }

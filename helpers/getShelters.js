@@ -58,8 +58,13 @@ async function getShelters(searchFilters = {}) {
     });
     return organizationsInfo;
   } catch (err) {
-    console.log("ERROR", err.response.status, err.response.statusText);
-    throw new ExpressError(err.response.statusText, err.response.status);
+    if (!err.response) {
+      console.log(err);
+      throw new Error(err);
+    } else {
+      console.log("ERROR", err.response.status, err.response.statusText);
+      throw new ExpressError(err.response.statusText, err.response.status);
+    }
   }
 }
 
@@ -75,6 +80,7 @@ async function getShelter(id) {
       },
     });
     const { organization } = shelterResponse.data;
+    console.log(`${BASE_URL}/organizations/${id}`);
 
     if (organization.id) {
       //If we find a shelter with that id, we get their adoptable dogs as well
@@ -124,8 +130,13 @@ async function getShelter(id) {
       throw new NotFoundError(`no shelter ${id}/ shelter no longer exists`);
     }
   } catch (err) {
-    console.log("ERROR", err.response.status, err.response.statusText);
-    throw new ExpressError(err.response.statusText, err.response.status);
+    if (!err.response) {
+      console.log(err);
+      throw new Error(err);
+    } else {
+      console.log("ERROR", err.response.status, err.response.statusText);
+      throw new ExpressError(err.response.statusText, err.response.status);
+    }
   }
 }
 

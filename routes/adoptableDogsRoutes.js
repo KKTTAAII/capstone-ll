@@ -53,10 +53,10 @@ router.get("/", ensureLoggedIn, async (req, res, next) => {
     const petFinderDogs = await getDogs(query);
     const foundAdoptableDogs = await AdoptableDog.findAll(query);
     if (petFinderDogs[0]) {
-      adoptableDogs.push(...petFinderShelters);
+      adoptableDogs.push(...petFinderDogs);
     }
     if (foundAdoptableDogs) {
-      adoptableDogs.push(...foundShelters);
+      adoptableDogs.push(...foundAdoptableDogs);
     }
     return res.json({ adoptableDogs });
   } catch (err) {
@@ -154,6 +154,16 @@ router.patch(
   ensureCorrectUserOrAdmin,
   async (req, res, next) => {
     try {
+      //no mutating data
+      const isGoodWCats = +req.body.goodWCats ? true : false;
+      const isGoodWDogs = +req.body.goodWDogs ? true : false;
+      const isGoodWKids = +req.body.goodWKids ? true : false;
+      delete req.body.goodWCats;
+      delete req.body.goodWDogs;
+      delete req.body.goodWKids;
+      req.body.goodWCats = isGoodWCats;
+      req.body.goodWDogs = isGoodWDogs;
+      req.body.goodWKids = isGoodWKids;
       const validator = jsonschema.validate(req.body, adoptableDogUpdateSchema);
       if (!validator.valid) {
         const errs = validator.errors.map(e => e.stack);

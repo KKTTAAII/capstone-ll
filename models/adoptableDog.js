@@ -157,19 +157,19 @@ class AdoptableDog {
     }
 
     if (goodWKids) {
-      const isgoodWKids = goodWKids === "yes" ? true : false;
+      const isgoodWKids = goodWKids === "1" ? true : false;
       queryValues.push(`${isgoodWKids}`);
       whereExpressions.push(`good_w_kids = $${queryValues.length}`);
     }
 
     if (goodWDogs) {
-      const isgoodWDogs = goodWDogs === "yes" ? true : false;
+      const isgoodWDogs = goodWDogs === "1" ? true : false;
       queryValues.push(`${isgoodWDogs}`);
       whereExpressions.push(`good_w_dogs = $${queryValues.length}`);
     }
 
     if (goodWCats) {
-      const isgoodWCats = goodWCats === "yes" ? true : false;
+      const isgoodWCats = goodWCats === "1" ? true : false;
       queryValues.push(`${isgoodWCats}`);
       whereExpressions.push(`good_w_cats = $${queryValues.length}`);
     }
@@ -210,6 +210,7 @@ class AdoptableDog {
     const adoptable_dogRes = await db.query(
       `SELECT  a.id,
                 a.name, 
+                a.breed_id AS "breedId",
                 b.breed, 
                 a.gender, 
                 a.age, 
@@ -295,7 +296,7 @@ class AdoptableDog {
                         WHERE id = ${handleVarIdx}
                         RETURNING id,
                                     name, 
-                                    breed_id, 
+                                    breed_id AS "breedId", 
                                     gender, 
                                     age, 
                                     picture, 
@@ -308,7 +309,9 @@ class AdoptableDog {
 
     if (!adoptable_dog) throw new NotFoundError(`No adoptable dog id: ${id}`);
 
-    return adoptable_dog;
+    const updated_dog = await this.get(adoptable_dog.id);
+
+    return updated_dog;
   }
 
   /**Delete given adoptable_dog id from db; return 'deleted'

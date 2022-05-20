@@ -18,6 +18,7 @@ const DEFAULT_PIC = "../assets/dog.png";
  * return [{dog}, ...]
  */
 async function getDogs(searchFilters = {}) {
+  console.log(searchFilters)
   try {
     const access_token = await getPetfinderToken();
     let { name, breedId, gender, age, goodWKids, goodWDogs, goodWCats } =
@@ -42,22 +43,20 @@ async function getDogs(searchFilters = {}) {
     }
 
     if (goodWKids) {
-      goodWKids = goodWKids === "yes" ? true : false;
-      query += `&good_with_children=${goodWKids}`;
+      query += `&good_with_children=${+goodWKids}`;
     }
 
     if (goodWDogs) {
-      goodWDogs = goodWDogs === "yes" ? true : false;
-      query += `&good_with_dogs=${goodWDogs}`;
+      query += `&good_with_dogs=${+goodWDogs}`;
     }
 
     if (goodWCats) {
-      goodWCats = goodWCats === "yes" ? true : false;
-      query += `&good_with_cats=${goodWCats}`;
+      query += `&good_with_cats=${+goodWCats}`;
     }
 
+    console.log(`${BASE_URL}/animals?type=dog&limit=5${query}`)
     const dogResponse = await axios.get(
-      `${BASE_URL}/animals?type=dog&limit=100${query}`,
+      `${BASE_URL}/animals?type=dog&limit=5${query}`,
       {
         headers: {
           Authorization: `Bearer ${access_token}`,
@@ -93,8 +92,13 @@ async function getDogs(searchFilters = {}) {
     });
     return dogsInfo;
   } catch (err) {
-    console.log("ERROR", err.response.status, err.response.statusText);
-    throw new ExpressError(err.response.statusText, err.response.status);
+    if (!err.response) {
+      console.log(err);
+      throw new Error(err);
+    } else {
+      console.log("ERROR", err.response.status, err.response.statusText);
+      throw new ExpressError(err.response.statusText, err.response.status);
+    }
   }
 }
 
