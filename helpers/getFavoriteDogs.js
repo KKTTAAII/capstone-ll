@@ -2,7 +2,7 @@ const AdoptableDog = require("../models/adoptableDog");
 const { getDog } = require("../helpers/getDogs");
 
 const getFavoriteDogsInfo = async dogIds => {
-  let dogs = [];
+  const dogs = [];
   for (let i = 0; i < dogIds.length; i++) {
     let dbResponse = await AdoptableDog.get(dogIds[i]);
     let petFinderresponse = await getDog(dogIds[i]);
@@ -14,7 +14,9 @@ const getFavoriteDogsInfo = async dogIds => {
       dogs.push("");
     }
   }
-  return dogs;
+  //we will filter for only those dogs that are still active/in db
+  const remainingDogs = dogs.filter(dog => dog !== "");
+  return remainingDogs;
 };
 
 module.exports = getFavoriteDogsInfo;
