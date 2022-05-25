@@ -85,9 +85,9 @@ router.get("/", ensureLoggedIn, async (req, res, next) => {
 router.get("/:dogId", ensureLoggedIn, async (req, res, next) => {
   const { dogId } = req.params;
   try {
-    let adoptableDog = [];
-    let dbResponse = await AdoptableDog.get(+dogId);
-    let petFinderresponse = await getDog(+dogId);
+    const adoptableDog = [];
+    const dbResponse = await AdoptableDog.get(+dogId);
+    const petFinderresponse = await getDog(+dogId);
     if (dbResponse !== null) {
       adoptableDog.push(dbResponse);
     }
@@ -124,7 +124,7 @@ router.post("/:userId", ensureCorrectUserOrAdmin, async (req, res, next) => {
     const breed = +req.body.breedId;
     delete req.body.breedId;
     req.body.breedId = breed;
-    
+
     const validator = jsonschema.validate(req.body, newDogSchema);
     if (!validator.valid) {
       const errs = validator.errors.map(e => e.stack);

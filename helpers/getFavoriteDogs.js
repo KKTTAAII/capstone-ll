@@ -1,7 +1,7 @@
 const AdoptableDog = require("../models/adoptableDog");
 const { getDog } = require("../helpers/getDogs");
 
-async function getFavoriteDogsInfo(dogIds) {
+const getFavoriteDogsInfo = async dogIds => {
   let dogs = [];
   for (let i = 0; i < dogIds.length; i++) {
     let dbResponse = await AdoptableDog.get(dogIds[i]);
@@ -15,6 +15,6 @@ async function getFavoriteDogsInfo(dogIds) {
     }
   }
   return dogs;
-}
+};
 
 module.exports = getFavoriteDogsInfo;
