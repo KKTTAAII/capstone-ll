@@ -111,7 +111,7 @@ router.get("/:dogId", ensureLoggedIn, async (req, res, next) => {
  */
 router.post("/:userId", ensureCorrectUserOrAdmin, async (req, res, next) => {
   try {
-    //no mutating data
+    //no mutate data
     const isGoodWCats = +req.body.goodWCats ? true : false;
     const isGoodWDogs = +req.body.goodWDogs ? true : false;
     const isGoodWKids = +req.body.goodWKids ? true : false;
@@ -158,7 +158,7 @@ router.patch(
   ensureCorrectUserOrAdmin,
   async (req, res, next) => {
     try {
-      //no mutating data
+      //no mutate data
       const isGoodWCats = +req.body.goodWCats ? true : false;
       const isGoodWDogs = +req.body.goodWDogs ? true : false;
       const isGoodWKids = +req.body.goodWKids ? true : false;
