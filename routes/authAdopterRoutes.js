@@ -68,23 +68,19 @@ router.post("/authenticate", async (req, res, next) => {
 
 router.post("/register", async (req, res, next) => {
   try {
-    //no mutating privateOutdoors to boolean, we create a new const for privateOutdoors
-    const isPrivateOutdoors = +req.body.privateOutdoors ? true : false;
-    delete req.body.privateOutdoors;
-    req.body.privateOutdoors = isPrivateOutdoors;
-    const dogNum = +req.body.numOfDogs;
-    delete req.body.numOfDogs;
-    req.body.numOfDogs = dogNum;
+    //adjusts the data to ensure it is compatible with our jsonSchema requirements
+    let copiedReqBody = JSON.parse(JSON.stringify(req.body));
+    copiedReqBody.privateOutdoors = +req.body.privateOutdoors ? true : false;
+    copiedReqBody.numOfDogs = +req.body.numOfDogs;
 
-    const validator = jsonschema.validate(req.body, authAdopterSchema);
+    const validator = jsonschema.validate(copiedReqBody, authAdopterSchema);
     if (!validator.valid) {
       const errs = validator.errors.map(e => e.stack);
       throw new BadRequestError(errs);
     }
 
     const newAdopter = await Adopter.register({
-      ...req.body,
-      privateOutdoors: isPrivateOutdoors,
+      ...copiedReqBody,
       isAdmin: false,
     });
     newAdopter.userType = "adopters";

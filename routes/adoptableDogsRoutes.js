@@ -111,21 +111,14 @@ router.get("/:dogId", ensureLoggedIn, async (req, res, next) => {
  */
 router.post("/:userId", ensureCorrectUserOrAdmin, async (req, res, next) => {
   try {
-    //no mutate data
-    const isGoodWCats = +req.body.goodWCats ? true : false;
-    const isGoodWDogs = +req.body.goodWDogs ? true : false;
-    const isGoodWKids = +req.body.goodWKids ? true : false;
-    delete req.body.goodWCats;
-    delete req.body.goodWDogs;
-    delete req.body.goodWKids;
-    req.body.goodWCats = isGoodWCats;
-    req.body.goodWDogs = isGoodWDogs;
-    req.body.goodWKids = isGoodWKids;
-    const breed = +req.body.breedId;
-    delete req.body.breedId;
-    req.body.breedId = breed;
+    //adjusts the data to ensure it is compatible with our jsonSchema requirements
+    let copiedReqBody = JSON.parse(JSON.stringify(req.body));
+    copiedReqBody.goodWCats = +copiedReqBody.goodWCats ? true : false;
+    copiedReqBody.goodWDogs = +copiedReqBody.goodWDogs ? true : false;
+    copiedReqBody.goodWKids = +copiedReqBody.goodWKids ? true : false;
+    copiedReqBody.breedId = +copiedReqBody.breedId;
 
-    const validator = jsonschema.validate(req.body, newDogSchema);
+    const validator = jsonschema.validate(copiedReqBody, newDogSchema);
     if (!validator.valid) {
       const errs = validator.errors.map(e => e.stack);
       throw new BadRequestError(errs);
@@ -134,7 +127,7 @@ router.post("/:userId", ensureCorrectUserOrAdmin, async (req, res, next) => {
     await isShelter(req, res);
     const shelter = await Shelter.get(userId);
     const newAdoptableDog = await AdoptableDog.create({
-      ...req.body,
+      ...copiedReqBody,
       shelterId: shelter.id,
     });
     return res.status(201).json({ newAdoptableDog });
@@ -158,28 +151,24 @@ router.patch(
   ensureCorrectUserOrAdmin,
   async (req, res, next) => {
     try {
-      //no mutate data
-      const isGoodWCats = +req.body.goodWCats ? true : false;
-      const isGoodWDogs = +req.body.goodWDogs ? true : false;
-      const isGoodWKids = +req.body.goodWKids ? true : false;
-      delete req.body.goodWCats;
-      delete req.body.goodWDogs;
-      delete req.body.goodWKids;
-      req.body.goodWCats = isGoodWCats;
-      req.body.goodWDogs = isGoodWDogs;
-      req.body.goodWKids = isGoodWKids;
-      const breed = +req.body.breedId;
-      delete req.body.breedId;
-      req.body.breedId = breed;
+      //adjusts the data to ensure it is compatible with our jsonSchema requirements
+      let copiedReqBody = JSON.parse(JSON.stringify(req.body));
+      copiedReqBody.goodWCats = +copiedReqBody.goodWCats ? true : false;
+      copiedReqBody.goodWDogs = +copiedReqBody.goodWDogs ? true : false;
+      copiedReqBody.goodWKids = +copiedReqBody.goodWKids ? true : false;
+      copiedReqBody.breedId = +copiedReqBody.breedId;
 
-      const validator = jsonschema.validate(req.body, adoptableDogUpdateSchema);
+      const validator = jsonschema.validate(
+        copiedReqBody,
+        adoptableDogUpdateSchema
+      );
       if (!validator.valid) {
         const errs = validator.errors.map(e => e.stack);
         throw new BadRequestError(errs);
       }
       await isShelter(req, res);
       const { dogId } = req.params;
-      const adoptableDog = await AdoptableDog.update(dogId, req.body);
+      const adoptableDog = await AdoptableDog.update(dogId, copiedReqBody);
       return res.json({ adoptableDog });
     } catch (err) {
       return next(err);

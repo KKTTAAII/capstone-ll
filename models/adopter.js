@@ -35,6 +35,7 @@ class Adopter {
       //compare hashed password to a new has from password
       const isValid = await bcrypt.compare(password, adopter.password);
       if (isValid) {
+        //we dont want to include the password in the return 
         delete adopter.password;
         return adopter;
       }

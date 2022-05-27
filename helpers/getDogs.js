@@ -126,6 +126,7 @@ async function getDog(dogId) {
       organization_id,
     } = animal;
     const shelter = await getShelter(organization_id);
+    //we do not need this info. We want to return only an individual dog per the dog id
     delete shelter.adoptableDogs;
     return {
       id: id,

@@ -37,6 +37,7 @@ class Shelter {
       //compare hashed password to a new has from password
       const isValid = await bcrypt.compare(password, shelter.password);
       if (isValid) {
+        //we dont want to include the password in the return
         delete shelter.password;
         return shelter;
       }
