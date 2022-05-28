@@ -2,7 +2,7 @@ const axios = require("axios");
 const { ExpressError } = require("../expressError");
 const BASE_URL = "https://api.petfinder.com/v2";
 const getPetfinderToken = require("./petFinderToken");
-const getBreedName = require("./getBreedName");
+const getBreedName = require("./getBreedname");
 const { getShelter } = require("./getShelters");
 const DEFAULT_PIC = "../assets/dog.png";
 
