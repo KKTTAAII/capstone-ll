@@ -2,7 +2,7 @@ const axios = require("axios");
 const { ExpressError } = require("../expressError");
 const BASE_URL = "https://api.petfinder.com/v2";
 const getPetfinderToken = require("./petFinderToken");
-const getBreed = require("./getBreedName");
+const getBreedName = require("./getBreedName");
 const { getShelter } = require("./getShelters");
 const DEFAULT_PIC = "../assets/dog.png";
 
@@ -30,7 +30,7 @@ async function getDogs(searchFilters = {}) {
 
     if (breedId) {
       //gotta translate the id into breedName first
-      const breedName = await getBreed(+breedId);
+      const breedName = await getBreedName(+breedId);
       query += `&breed=${breedName}`;
     }
 
