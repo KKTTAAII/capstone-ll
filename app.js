@@ -24,11 +24,11 @@ app.use(authenticateJWT);
 app.use(/\/((?!forgotPassword).)*/, authenticateJWT);
 app.use(/\/((?!resetForgotPassword).)*/, authenticateJWT);
 
-app.use("/authShelter", authShelterRoutes);
-app.use("/authAdopter", authAdopterRoutes);
-app.use("/shelters", sheltersRoutes);
-app.use("/adopters", adoptersRoutes);
-app.use("/adoptableDogs", adoptableDogsRoutes);
+app.use("authShelter", authShelterRoutes);
+app.use("authAdopter", authAdopterRoutes);
+app.use("shelters", sheltersRoutes);
+app.use("adopters", adoptersRoutes);
+app.use("adoptableDogs", adoptableDogsRoutes);
 
 /** Handle 404 errors -- this matches everything */
 app.use(function (req, res, next) {
