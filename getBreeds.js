@@ -22,6 +22,7 @@ async function getBreeds() {
     },
   });
   const allBreeds = breedResponse.data.breeds;
-  allBreeds.forEach((obj, ind) => console.log(`{id: ${ind + 1}, breedName: '${obj.name}'}`));
+  allBreeds.forEach((obj, ind) =>
+    console.log(`{id: ${ind + 1}, breedName: '${obj.name}'}`)
+  );
 }
-
