@@ -21,14 +21,14 @@ app.use(cors());
 app.use(morgan("tiny"));
 app.use(authenticateJWT);
 //exclude these routes because it's for reset password without having to log in
-app.use(/\/((?!forgotPassword).)*/, authenticateJWT);
-app.use(/\/((?!resetForgotPassword).)*/, authenticateJWT);
+// app.use(/\/((?!forgotPassword).)*/, authenticateJWT);
+// app.use(/\/((?!resetForgotPassword).)*/, authenticateJWT);
 
-app.use("authShelter", authShelterRoutes);
-app.use("authAdopter", authAdopterRoutes);
-app.use("shelters", sheltersRoutes);
-app.use("adopters", adoptersRoutes);
-app.use("adoptableDogs", adoptableDogsRoutes);
+app.use("/authShelter", authShelterRoutes);
+app.use("/authAdopter", authAdopterRoutes);
+app.use("/shelters", sheltersRoutes);
+app.use("/adopters", adoptersRoutes);
+app.use("/adoptableDogs", adoptableDogsRoutes);
 
 /** Handle 404 errors -- this matches everything */
 app.use(function (req, res, next) {

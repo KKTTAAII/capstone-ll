@@ -12,6 +12,8 @@ const { BadRequestError } = require("../expressError");
 const userAuthSchema = require("../jsonSchemas/userAuth.json");
 const authAdopterSchema = require("../jsonSchemas/adopter/registerAdopter.json");
 
+console.log("authAdopter Route")
+
 /** POST /auth/token:  { username, password } => { token }
  *
  * Returns JWT token which can be used to authenticate further requests.
