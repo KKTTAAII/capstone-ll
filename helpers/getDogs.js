@@ -2,7 +2,7 @@ const axios = require("axios");
 const { ExpressError } = require("../expressError");
 const BASE_URL = "https://api.petfinder.com/v2";
 const getPetfinderToken = require("./petFinderToken");
-const getBreed = require("../helpers/getBreedName");
+const getBreed = require("./getBreedName");
 const { getShelter } = require("./getShelters");
 const DEFAULT_PIC = "../assets/dog.png";
 
@@ -18,7 +18,6 @@ const DEFAULT_PIC = "../assets/dog.png";
  * return [{dog}, ...]
  */
 async function getDogs(searchFilters = {}) {
-  console.log(searchFilters);
   try {
     const access_token = await getPetfinderToken();
     let { name, breedId, gender, age, goodWKids, goodWDogs, goodWCats } =
