@@ -143,6 +143,7 @@ async function getDog(dogId) {
     };
   } catch (err) {
     console.log("ERROR", err.response.statusText);
+    console.log("it's from here")
     if (err.response.statusText === "Not Found") {
       return null;
     } else {

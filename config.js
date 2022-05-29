@@ -8,7 +8,8 @@ require("colors");
 console.log(process.env.SECRET_KEY);
 console.log(process.env.MY_SECRET_KEY);
 
-const SECRET_KEY = process.env.SECRET_KEY || process.env.MY_SECRET_KEY;
+const SECRET_KEY =
+  "" + process.env.SECRET_KEY || "" + process.env.MY_SECRET_KEY;
 
 const PORT = process.env.PORT || 3001;
 
