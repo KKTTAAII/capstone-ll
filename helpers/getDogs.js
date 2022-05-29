@@ -92,6 +92,7 @@ async function getDogs(searchFilters = {}) {
     return dogsInfo;
   } catch (err) {
     if (!err.response) {
+      console.log("unauthorized error from getDog")
       console.log(err);
       throw new Error(err);
     } else {
