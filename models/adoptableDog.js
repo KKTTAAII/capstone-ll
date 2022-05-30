@@ -147,13 +147,13 @@ class AdoptableDog {
     }
 
     if (gender) {
-      queryValues.push(`%${gender}%`);
-      whereExpressions.push(`gender ILIKE $${queryValues.length}`);
+      queryValues.push(`${gender}`);
+      whereExpressions.push(`gender = $${queryValues.length}`);
     }
 
     if (age) {
-      queryValues.push(`%${age}%`);
-      whereExpressions.push(`age ILIKE $${queryValues.length}`);
+      queryValues.push(`${age}`);
+      whereExpressions.push(`age = $${queryValues.length}`);
     }
 
     if (goodWKids) {
