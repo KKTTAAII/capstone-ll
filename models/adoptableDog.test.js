@@ -1,11 +1,7 @@
 "use strict";
 
 const db = require("../db");
-const {
-  BadRequestError,
-  NotFoundError,
-  UnauthorizedError,
-} = require("../expressError");
+const { NotFoundError } = require("../expressError");
 const AdoptableDog = require("./adoptableDog");
 const {
   commonBeforeAll,

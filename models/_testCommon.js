@@ -10,6 +10,8 @@ async function commonBeforeAll() {
   await db.query("DELETE FROM adoptable_dogs");
   // noinspection SqlWithoutWhere
   await db.query("DELETE FROM breed");
+  // noinspection SqlWithoutWhere
+  await db.query("DELETE FROM adopters");
 
   await db.query(
     `INSERT INTO breed(breed)
@@ -66,6 +68,13 @@ async function commonBeforeAll() {
       shelter2.rows[0].id,
       shelter3.rows[0].id,
     ]
+  );
+
+  await db.query(
+    `INSERT INTO adopters (username, password, email, description, private_outdoors, num_of_dogs, preferred_gender, preferred_age)
+        VALUES ('nhawker0', 'yrnwI0KK', 'hfjuhb@gmail.com','morph revolutionary niches', false, 1, 'Female', 'Young'),
+        ('fwadlow1', '60eForkV', 'bfjhbu@hotmail.com', 'recontextualize user-centric convergence', false, 2, 'Female', 'Baby'),
+        ('cbein2', 'XT1X8Ox', 'bfghui@yahoo.com', 'visualize vertical eyeballs', false, 3, 'Female', 'Adult');`
   );
 }
 

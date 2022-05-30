@@ -57,7 +57,6 @@ class Adopter {
    * isAdmin}
    *
    * returns {username,
-   * password,
    * email,
    * picture,
    * description,
@@ -184,6 +183,12 @@ class Adopter {
 
     query += " ORDER BY username";
     const adoptersRes = await db.query(query, queryValues);
+
+    if (!adoptersRes.rows[0]) {
+      console.log(`No adopters Found`);
+      return;
+    }
+
     return adoptersRes.rows;
   }
 
@@ -440,7 +445,7 @@ class Adopter {
       [hashedPassword, username]
     );
 
-    return { updatePassword: "password update sucessfully" };
+    return { updatePassword: "Password updated sucessfully" };
   }
 }
 
