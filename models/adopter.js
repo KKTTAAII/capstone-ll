@@ -35,7 +35,7 @@ class Adopter {
       //compare hashed password to a new has from password
       const isValid = await bcrypt.compare(password, adopter.password);
       if (isValid) {
-        //we dont want to include the password in the return 
+        //we dont want to include the password in the return
         delete adopter.password;
         return adopter;
       }
@@ -231,16 +231,8 @@ class Adopter {
     if (!adopter) throw new NotFoundError(`No adopter: ${username}`);
 
     const fav_dogsRes = await db.query(
-      `SELECT d.name,
-                d.breed_id AS "breedId",
-                d.gender,
-                d.age,
-                d.picture,
-                d.description,
-                d.shelter_id AS "shelterId"
-            FROM adoptable_dogs d
-            JOIN fav_dogs f
-            ON f.adoptable_pets_id = d.id
+      `SELECT adoptable_pets_id AS "id"
+            FROM fav_dogs 
             WHERE adopters_id = $1`,
       [adopter.id]
     );

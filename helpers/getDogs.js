@@ -55,7 +55,7 @@ async function getDogs(searchFilters = {}) {
     }
 
     const dogResponse = await axios.get(
-      `${BASE_URL}/animals?type=dog&limit=3${query}`,
+      `${BASE_URL}/animals?type=dog&limit=50${query}`,
       {
         headers: {
           Authorization: `Bearer ${access_token}`,

@@ -30,7 +30,7 @@ async function getShelters(searchFilters = {}) {
     }
 
     const shelterResponse = await axios.get(
-      `${BASE_URL}/organizations?limit=3${query}`,
+      `${BASE_URL}/organizations?limit=50${query}`,
       {
         headers: {
           Authorization: `Bearer ${access_token}`,
