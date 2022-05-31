@@ -92,7 +92,7 @@ async function getDogs(searchFilters = {}) {
     return dogsInfo;
   } catch (err) {
     if (!err.response) {
-      console.log("unauthorized error from getDog")
+      console.log("unauthorized error from getDog");
       console.log(err);
       throw new Error(err);
     } else {
@@ -143,9 +143,8 @@ async function getDog(dogId) {
       shelter: shelter,
     };
   } catch (err) {
-    console.log("ERROR", err.response.statusText);
-    console.log("it's from here")
     if (err.response.statusText === "Not Found") {
+      console.log("ERROR", err.response.statusText);
       return null;
     } else {
       throw new ExpressError(err.response.statusText, err.response.status);
