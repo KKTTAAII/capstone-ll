@@ -79,7 +79,6 @@ async function getShelter(id) {
       },
     });
     const { organization } = shelterResponse.data;
-    console.log(`${BASE_URL}/organizations/${id}`);
 
     if (organization.id) {
       //If we find a shelter with that id, we get their adoptable dogs as well
