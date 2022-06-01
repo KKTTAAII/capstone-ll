@@ -6,7 +6,7 @@ Description:
 Ktai-Petly is a resemblance of a two sided marketplace app. There are 2 sides of users, shelters and adopters. The adoptable pets on the site is dogs. Shelters can sign up and post their adoptable dogs. Adopters can sign up to view the adoptable dogs, and if they want to contact the shelter about a dog, they can send the shelter their message and contact info. The shelter will receive it as an email. 
 
 ## User Flow
-![user flow](/frontend/userFlow.jpg)
+![user flow](https://github.com/KKTTAAII/capstone-ll-frontend/blob/master/userFlow.jpg?raw=true)
 
 ## Main Features
  - user can log in/ sign up
@@ -20,7 +20,7 @@ Ktai-Petly is a resemblance of a two sided marketplace app. There are 2 sides of
 
 ## Schema
 
-![Schema](/backend/schema/updated%205.12.png).
+![Schema](https://github.com/KKTTAAII/capstone-ll-backend/blob/master/schema/updated%205.12.png?raw=true).
 
 ## Technologies used
 - node.js
