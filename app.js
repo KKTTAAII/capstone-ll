@@ -10,7 +10,6 @@ const authAdopterRoutes = require("./routes/authAdopterRoutes");
 const sheltersRoutes = require("./routes/sheltersRoutes");
 const adoptersRoutes = require("./routes/adoptersRoutes");
 const adoptableDogsRoutes = require("./routes/adoptableDogsRoutes");
-const path = require("path");
 
 const morgan = require("morgan");
 
