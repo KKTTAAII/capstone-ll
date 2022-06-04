@@ -29,8 +29,8 @@ app.use("/authAdopter", authAdopterRoutes);
 app.use("/shelters", sheltersRoutes);
 app.use("/adopters", adoptersRoutes);
 app.use("/adoptableDogs", adoptableDogsRoutes);
-app.use("/assets", express.static("assets"));
-app.use("/adopters/assets", express.static("assets"));
+app.use("/assets/", express.static("assets"));
+app.use("/adopters/assets/", express.static("assets"));
 
 /** Handle 404 errors -- this matches everything */
 app.use(function (req, res, next) {
