@@ -2,7 +2,8 @@ const axios = require("axios");
 const { NotFoundError, ExpressError } = require("../expressError");
 const BASE_URL = "https://api.petfinder.com/v2";
 const getPetfinderToken = require("./petFinderToken");
-const DEFAULT_PIC = "../assets/shelter.jpg";
+const DEFAULT_SHELTER_PIC = "../assets/shelter.jpg";
+const DEFAULT_DOG_PIC = "../assets/dog.png";
 
 /* Get shelters from petFinder API
  * user can filter by name, city, state, or postcode
@@ -51,7 +52,7 @@ async function getShelters(searchFilters = {}) {
         postode: address.postcode,
         phoneNumber: phone,
         email,
-        logo: photos[0] ? photos[0].small : DEFAULT_PIC,
+        logo: photos[0] ? photos[0].small : DEFAULT_SHELTER_PIC,
         description: mission_statement,
       };
     });
@@ -101,7 +102,7 @@ async function getShelter(id) {
             breedId: breeds.primary,
             gender: gender,
             age: age,
-            picture: photos[0] ? photos[0].small : DEFAULT_PIC,
+            picture: photos[0] ? photos[0].small : DEFAULT_DOG_PIC,
           };
         });
       }
