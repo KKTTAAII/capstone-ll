@@ -50,7 +50,7 @@ Ktai-Petly is a resemblance of a two sided marketplace app. There are 2 sides of
 5. clone the backend repo
    
         $ git clone  https://github.com/KKTTAAII/capstone-ll-backend.git
-6.  clone the backend repo
+6.  clone the frontend repo
    
         $ git clone https://github.com/KKTTAAII/capstone-ll-frontend.git
 7. run this command to install all packages for both front-end and back-end. Ensure to run in both backend and fronend folders
