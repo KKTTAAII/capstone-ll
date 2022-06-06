@@ -46,17 +46,17 @@ Ktai-Petly is a resemblance of a two sided marketplace app. There are 2 sides of
 1. create main folder for both frontend and backend repos
 2. create an account with [PetFinder API](https://www.petfinder.com/developers/) to get API_KEY and SECRET_KEY
 3. in the backend folder, create .env file to store the keys
-4. create variables EMAIL(your email), PASS(password), HOST(your host smtp) for nodemailer so user can send messages to shelters
+4. create variables EMAIL(your email), PASS(password), HOST(your host smtp) for nodemailer so user can send messages to shelters. Store these in .env file
 5. clone the backend repo
    
         $ git clone  https://github.com/KKTTAAII/capstone-ll-backend.git
 6.  clone the frontend repo
    
         $ git clone https://github.com/KKTTAAII/capstone-ll-frontend.git
-7. run this command to install all packages for both front-end and back-end. Ensure to run in both backend and fronend folders
+7. run this command to install all packages for both frontend and backend. Ensure to run in both backend and fronend folders
         
         $ npm install     
-8. ensure you are in the main back-end folder, run the command below to start the app. This will start both backend and frontend servers
+8. ensure you are in the main backend folder, run the command below to start the app. This will start both backend and frontend servers
    
         $ npm run dev       
 
