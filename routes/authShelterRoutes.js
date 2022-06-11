@@ -74,7 +74,10 @@ router.post("/register", async (req, res, next) => {
       throw new BadRequestError(errs);
     }
 
-    const newShelter = await Shelter.register({ ...req.body, isAdmin: false });
+    const newShelter = await Shelter.register({
+      ...req.body,
+      isAdmin: req.body.isAdmin ? req.body.isAdmin : false,
+    });
     newShelter.userType = "shelters";
     const token = createToken(newShelter);
     return res.status(201).json({ token });

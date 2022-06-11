@@ -81,7 +81,7 @@ router.post("/register", async (req, res, next) => {
 
     const newAdopter = await Adopter.register({
       ...copiedReqBody,
-      isAdmin: false,
+      isAdmin: req.body.isAdmin ? req.body.isAdmin : false,
     });
     newAdopter.userType = "adopters";
     const token = createToken(newAdopter);
