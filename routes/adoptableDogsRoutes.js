@@ -49,15 +49,18 @@ router.get("/", ensureLoggedIn, async (req, res, next) => {
       const errs = validator.errors.map(e => e.stack);
       throw new BadRequestError(errs);
     }
-    const adoptableDogs = [];
+    const allAdoptableDogs = [];
     const petFinderDogs = await getDogs(query);
     const foundAdoptableDogs = await AdoptableDog.findAll(query);
     if (petFinderDogs[0]) {
-      adoptableDogs.push(...petFinderDogs);
+      allAdoptableDogs.push(...petFinderDogs);
     }
     if (foundAdoptableDogs) {
-      adoptableDogs.push(...foundAdoptableDogs);
+      allAdoptableDogs.push(...foundAdoptableDogs);
     }
+    const adoptableDogs = allAdoptableDogs.sort((a, b) =>
+      a.name.localeCompare(b.name)
+    );
     return res.json({ adoptableDogs });
   } catch (err) {
     return next(err);

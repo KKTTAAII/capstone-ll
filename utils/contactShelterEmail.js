@@ -32,8 +32,10 @@ const sendEmail = async (
     });
 
     console.log("email sent sucessfully");
+    return "email sent sucessfully"
   } catch (error) {
     console.log(error, "email not sent");
+    return "email not sent"
   }
 };
 

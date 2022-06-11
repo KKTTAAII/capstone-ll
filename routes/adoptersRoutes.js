@@ -35,7 +35,10 @@ router.get("/", ensureLoggedIn, async (req, res, next) => {
       throw new BadRequestError(errs);
     }
 
-    const adopters = await Adopter.findAll(query);
+    const allAdopters = await Adopter.findAll(query);
+    const adopters = allAdopters.sort((a, b) =>
+      a.username.localeCompare(b.username)
+    );
     return res.json({ adopters });
   } catch (err) {
     return next(err);
@@ -100,7 +103,7 @@ router.patch(
       let copiedReqBody = JSON.parse(JSON.stringify(req.body));
       copiedReqBody.privateOutdoors = +req.body.privateOutdoors ? true : false;
       copiedReqBody.numOfDogs = +req.body.numOfDogs;
-      
+
       const validator = jsonschema.validate(copiedReqBody, adopterUpdateSchema);
       if (!validator.valid) {
         const errs = validator.errors.map(e => e.stack);

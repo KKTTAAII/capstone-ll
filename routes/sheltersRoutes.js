@@ -39,15 +39,16 @@ router.get("/", ensureLoggedIn, async (req, res, next) => {
       const errs = validator.errors.map(e => e.stack);
       throw new BadRequestError(errs);
     }
-    const shelters = [];
+    const allShelters = [];
     const petFinderShelters = await getShelters(query);
     const foundShelters = await Shelter.findAll(query);
     if (petFinderShelters[0]) {
-      shelters.push(...petFinderShelters);
+      allShelters.push(...petFinderShelters);
     }
     if (foundShelters) {
-      shelters.push(...foundShelters);
+      allShelters.push(...foundShelters);
     }
+    const shelters = allShelters.sort((a, b) => a.name.localeCompare(b.name));
     return res.json({ shelters });
   } catch (err) {
     return next(err);
@@ -156,14 +157,14 @@ router.post(
       const shelter = await Shelter.get(userId);
       const shelterEmail = shelter.email;
       const { adopterEmail, name, message } = req.body;
-      await sendContactShelterEmail(
+      const emailSentResult = await sendContactShelterEmail(
         adopterEmail,
         "Hi, I am interested in adopting one of your dogs",
         name,
         message,
         shelterEmail
       );
-      res.send("Email sent to the shelter");
+      res.send(emailSentResult);
     } catch (err) {
       return next(err);
     }
