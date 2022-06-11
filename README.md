@@ -78,7 +78,7 @@ Ktai-Petly is a resemblance of a two sided marketplace app. There are 2 sides of
 ## v2.0.0 - Future Features
 - user can share the dog they want to adopt with their friends via social media
 - user can upload their picture from their local machine. To do this effectively, a third party image storage API will need to be used (S3, Cloudinary, etc). After receiving the picture file form the frontend form, that file needs to be transaformed into an image path using the third party API. Once a path from the third party is received, it can be stored in the database. When a user logs in next time, the path can be pull from the data base to put in the <img /> in the src attribute
-- fix the reactstrap jest test issue by replacing it with CSS
+- fix the reactstrap jest test issue by replacing it with CSS. Similar problem here https://github.com/reactstrap/reactstrap/issues/872
 - To save the number of requests for when a user favorites/unfavorites a dog:
   - 1. Every time a user favorites a dog, add the dog into a local storage. If they unfavorite or favorite that dog again, the data is already in the localStorage, so, it can be pulled from there to display in the "My Favorites" page, instead of, calling the API again. However, this will not persist across all users. Therefore, there is number 2 option
   - 2. Get all the favorited dogs from the database table name "fav_dogs", call all the dogs in there at once and save them in a global variable (can do useRef), then we can check if the user favorite a dog that is in that variable so we do not have to call the API. This will be for all users and we get the freshest data from Petfinder API

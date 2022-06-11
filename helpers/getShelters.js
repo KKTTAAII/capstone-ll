@@ -119,7 +119,7 @@ async function getShelter(id) {
         postode: address.postcode,
         phoneNumber: phone,
         email: email,
-        logo: photos[0] ? photos[0].medium : DEFAULT_PIC,
+        logo: photos[0] ? photos[0].medium : DEFAULT_SHELTER_PIC,
         description: mission_statement,
         adoptableDogs: adoptableDogs,
       };

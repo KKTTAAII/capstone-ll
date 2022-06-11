@@ -81,15 +81,22 @@ class Adopter {
     preferredAge = "Young",
     isAdmin,
   }) {
-    const duplicateCheck = await db.query(
+    const duplicateCheckWithAdopter = await db.query(
       `SELECT username
             FROM adopters
             WHERE username = $1`,
       [username]
     );
 
-    if (duplicateCheck.rows[0])
-      throw new BadRequestError(`Duplicate adopter username: ${username}`);
+    const duplicateCheckWithShelter = await db.query(
+      `SELECT username
+            FROM shelters
+            WHERE username = $1`,
+      [username]
+    );
+
+    if (duplicateCheckWithAdopter.rows[0] || duplicateCheckWithShelter.rows[0])
+      throw new BadRequestError(`Duplicate username: ${username}`);
 
     const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
 
