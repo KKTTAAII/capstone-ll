@@ -81,22 +81,35 @@ class Adopter {
     preferredAge = "Young",
     isAdmin,
   }) {
-    const duplicateCheckWithAdopter = await db.query(
+    const duplicateUsername = await db.query(
       `SELECT username
             FROM adopters
             WHERE username = $1`,
       [username]
     );
 
-    const duplicateCheckWithShelter = await db.query(
+    const duplicateEmailCheckWithShelter = await db.query(
       `SELECT username
             FROM shelters
-            WHERE username = $1`,
-      [username]
+            WHERE email = $1`,
+      [email]
     );
 
-    if (duplicateCheckWithAdopter.rows[0] || duplicateCheckWithShelter.rows[0])
+    const duplicateEmailCheckWithAdopter = await db.query(
+      `SELECT username
+            FROM adopters
+            WHERE email = $1`,
+      [email]
+    );
+
+    if (duplicateUsername.rows[0])
       throw new BadRequestError(`Duplicate username: ${username}`);
+
+    if (
+      duplicateEmailCheckWithAdopter.rows[0] ||
+      duplicateEmailCheckWithShelter.rows[0]
+    )
+      throw new BadRequestError(`This email was already registered`);
 
     const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
 
