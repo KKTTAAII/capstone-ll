@@ -31,11 +31,6 @@
                 "kratai@gmail.com"
             ]
         },
-        "picture": {
-            "type": "object",
-            "default": "",
-            "title": "The picture Schema"
-        },
         "description": {
             "type": "string",
             "default": "",

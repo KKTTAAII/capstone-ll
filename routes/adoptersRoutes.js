@@ -15,7 +15,7 @@ const {
 const adopterSearchSchema = require("../jsonSchemas/adopter/adopterSearch.json");
 const adopterUpdateSchema = require("../jsonSchemas/adopter/adopterUpdate.json");
 const getFavoritesDogsInfo = require("../helpers/getFavoriteDogs");
-
+const cloudinary = require("../utils/cloudinary");
 const router = new express.Router();
 
 /** GET /  =>
@@ -102,6 +102,15 @@ router.patch(
       let copiedReqBody = JSON.parse(JSON.stringify(req.body));
       copiedReqBody.privateOutdoors = +req.body.privateOutdoors ? true : false;
       copiedReqBody.numOfDogs = +req.body.numOfDogs;
+
+      if (req.body.picture) {
+        const uploadRes = await cloudinary.uploader.upload(req.body.picture, {
+          upload_preset: "petly",
+        });
+        if (uploadRes) {
+          copiedReqBody.picture = uploadRes;
+        }
+      }
 
       const validator = jsonschema.validate(copiedReqBody, adopterUpdateSchema);
       if (!validator.valid) {
