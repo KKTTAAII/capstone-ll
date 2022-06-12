@@ -17,7 +17,7 @@ const shelterUpdateSchema = require("../jsonSchemas/shelter/shelterUpdate.json")
 const contactShelterSchema = require("../jsonSchemas/shelter/contactShelter.json");
 const sendContactShelterEmail = require("../utils/contactShelterEmail");
 const { getShelters, getShelter } = require("../helpers/getShelters");
-
+const cloudinary = require("../utils/cloudinary");
 const router = new express.Router();
 
 /** GET /  =>
@@ -110,6 +110,17 @@ router.post("/", ensureAdmin, async (req, res, next) => {
 
 router.patch("/:userId", ensureCorrectUserOrAdmin, async (req, res, next) => {
   try {
+    if (req.body.logo) {
+      const uploadRes = await cloudinary.uploader.upload(req.body.logo, {
+        upload_preset: "petly",
+      });
+      if (uploadRes) {
+        req.body.logo = uploadRes;
+      }
+    }
+
+    console.log(req.body);
+
     const validator = jsonschema.validate(req.body, shelterUpdateSchema);
     if (!validator.valid) {
       const errs = validator.errors.map(e => e.stack);

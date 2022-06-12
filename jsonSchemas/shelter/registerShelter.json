@@ -76,11 +76,8 @@
             ]
         },
         "logo": {
-            "type": "string",
-            "title": "The logo Schema",
-            "examples": [
-                "https://cdn-icons-png.flaticon.com/512/3769/3769065.png"
-            ]
+            "type": "object",
+            "title": "The logo Schema"
         },
         "description": {
             "type": "string",
@@ -100,7 +97,6 @@
         "postcode": "80424",
         "phoneNumber": "028017562",
         "email": "kratai@gmail.com",
-        "logo": "https://cdn-icons-png.flaticon.com/512/3769/3769065.png",
         "description": "hello world"
     }]
 }

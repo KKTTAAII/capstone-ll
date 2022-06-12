@@ -11,6 +11,7 @@ const { createToken } = require("../helpers/tokens");
 const { BadRequestError } = require("../expressError");
 const userAuthSchema = require("../jsonSchemas/userAuth.json");
 const authShelterSchema = require("../jsonSchemas/shelter/registerShelter.json");
+const cloudinary = require("../utils/cloudinary");
 
 /** POST /auth/token:  { username, password } => { token }
  *
@@ -68,6 +69,15 @@ router.post("/authenticate", async (req, res, next) => {
 
 router.post("/register", async (req, res, next) => {
   try {
+    if (req.body.logo) {
+      const uploadRes = await cloudinary.uploader.upload(req.body.logo, {
+        upload_preset: "petly",
+      });
+      if (uploadRes) {
+        req.body.logo = uploadRes;
+      }
+    }
+
     const validator = jsonschema.validate(req.body, authShelterSchema);
     if (!validator.valid) {
       const errs = validator.errors.map(e => e.stack);
