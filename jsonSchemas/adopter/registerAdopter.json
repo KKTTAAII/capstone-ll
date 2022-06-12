@@ -22,6 +22,9 @@
                 "bhdskjgnrekjn"
             ]
         },
+        "picture" : {
+            "type": "object"
+        },
         "email": {
             "type": "string",
             "minLength": 6,
