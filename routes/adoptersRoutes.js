@@ -34,7 +34,6 @@ router.get("/", ensureLoggedIn, async (req, res, next) => {
       const errs = validator.errors.map(e => e.stack);
       throw new BadRequestError(errs);
     }
-
     const allAdopters = await Adopter.findAll(query);
     const adopters = allAdopters.sort((a, b) =>
       a.username.localeCompare(b.username)

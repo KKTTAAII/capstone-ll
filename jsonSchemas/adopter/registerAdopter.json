@@ -32,12 +32,9 @@
             ]
         },
         "picture": {
-            "type": "string",
+            "type": "object",
             "default": "",
-            "title": "The picture Schema",
-            "examples": [
-                "https://cdn-icons-png.flaticon.com/512/3769/3769065.png"
-            ]
+            "title": "The picture Schema"
         },
         "description": {
             "type": "string",
@@ -79,16 +76,5 @@
                 "young"
             ]
         }
-    },
-    "examples": [{
-        "username": "hjbfyeb",
-        "password": "bhdskjgnrekjn",
-        "email": "kratai@gmail.com",
-        "picture": "https://cdn-icons-png.flaticon.com/512/3769/3769065.png",
-        "description": "hello world",
-        "privateOutdoors": false,
-        "numOfDogs": 2,
-        "preferredGender": "Male",
-        "preferredAge": "young"
-    }]
+    }
 }

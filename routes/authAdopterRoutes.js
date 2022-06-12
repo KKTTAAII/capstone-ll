@@ -1,9 +1,7 @@
 "use strict";
 
 /** Routes for authentication. */
-
 const jsonschema = require("jsonschema");
-
 const Adopter = require("../models/adopter");
 const express = require("express");
 const router = new express.Router();
@@ -11,6 +9,7 @@ const { createToken } = require("../helpers/tokens");
 const { BadRequestError } = require("../expressError");
 const userAuthSchema = require("../jsonSchemas/userAuth.json");
 const authAdopterSchema = require("../jsonSchemas/adopter/registerAdopter.json");
+const cloudinary = require("../utils/cloudinary");
 
 /** POST /auth/token:  { username, password } => { token }
  *
@@ -72,6 +71,15 @@ router.post("/register", async (req, res, next) => {
     let copiedReqBody = JSON.parse(JSON.stringify(req.body));
     copiedReqBody.privateOutdoors = +req.body.privateOutdoors ? true : false;
     copiedReqBody.numOfDogs = +req.body.numOfDogs;
+
+    if (req.body.picture) {
+      const uploadRes = await cloudinary.uploader.upload(req.body.picture, {
+        upload_preset: "petly",
+      });
+      if (uploadRes) {
+        copiedReqBody.picture = uploadRes;
+      }
+    }
 
     const validator = jsonschema.validate(copiedReqBody, authAdopterSchema);
     if (!validator.valid) {
