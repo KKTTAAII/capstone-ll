@@ -69,7 +69,7 @@ router.post("/authenticate", async (req, res, next) => {
 
 router.post("/register", async (req, res, next) => {
   try {
-    if (req.body.logo) {
+    if (!req.body.logo.startsWith("/static/media")) {
       const uploadRes = await cloudinary.uploader.upload(req.body.logo, {
         upload_preset: "petly",
       });

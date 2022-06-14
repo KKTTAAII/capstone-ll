@@ -70,11 +70,6 @@
                 "helloworld@gmail.com"
             ]
         },
-        "logo": {
-            "type": "object",
-            "default": "",
-            "title": "The logo Schema"
-        },
         "description": {
             "type": "string",
             "default": "",

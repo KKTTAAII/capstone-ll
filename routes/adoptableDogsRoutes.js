@@ -17,7 +17,7 @@ const newDogSchema = require("../jsonSchemas/adoptableDog/newAdoptableDog.json")
 const { getDogs, getDog } = require("../helpers/getDogs");
 const Shelter = require("../models/shelter");
 const isShelter = require("../helpers/isShelter");
-
+const cloudinary = require("../utils/cloudinary");
 const router = new express.Router();
 
 /** GET /  =>
@@ -121,6 +121,15 @@ router.post("/:userId", ensureCorrectUserOrAdmin, async (req, res, next) => {
     copiedReqBody.goodWKids = +copiedReqBody.goodWKids ? true : false;
     copiedReqBody.breedId = +copiedReqBody.breedId;
 
+    if (!req.body.picture.startsWith("/static/media")) {
+      const uploadRes = await cloudinary.uploader.upload(req.body.picture, {
+        upload_preset: "petly",
+      });
+      if (uploadRes) {
+        copiedReqBody.picture = uploadRes;
+      }
+    }
+
     const validator = jsonschema.validate(copiedReqBody, newDogSchema);
     if (!validator.valid) {
       const errs = validator.errors.map(e => e.stack);
@@ -160,6 +169,15 @@ router.patch(
       copiedReqBody.goodWDogs = +copiedReqBody.goodWDogs ? true : false;
       copiedReqBody.goodWKids = +copiedReqBody.goodWKids ? true : false;
       copiedReqBody.breedId = +copiedReqBody.breedId;
+
+      if (!req.body.picture.startsWith("/static/media")) {
+        const uploadRes = await cloudinary.uploader.upload(req.body.picture, {
+          upload_preset: "petly",
+        });
+        if (uploadRes) {
+          copiedReqBody.picture = uploadRes;
+        }
+      }
 
       const validator = jsonschema.validate(
         copiedReqBody,

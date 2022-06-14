@@ -40,6 +40,7 @@ Ktai-Petly is a resemblance of a two sided marketplace app. There are 2 sides of
 - jsonschema
 - postgresql
 - [PetFinder API](https://www.petfinder.com/developers/v2/docs/)
+- [Cloudinary](https://cloudinary.com/)
 
 ## Try the code on your local machine
 

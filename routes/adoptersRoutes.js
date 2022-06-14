@@ -103,7 +103,7 @@ router.patch(
       copiedReqBody.privateOutdoors = +req.body.privateOutdoors ? true : false;
       copiedReqBody.numOfDogs = +req.body.numOfDogs;
 
-      if (req.body.picture) {
+      if (!req.body.picture.startsWith("/static/media")) {
         const uploadRes = await cloudinary.uploader.upload(req.body.picture, {
           upload_preset: "petly",
         });

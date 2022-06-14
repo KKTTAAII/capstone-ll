@@ -43,14 +43,6 @@
                 "Young"
             ]
         },
-        "picture": {
-            "type": "string",
-            "default": "",
-            "title": "The picture Schema",
-            "examples": [
-                "https://cdn-icons-png.flaticon.com/512/3769/3769065.png"
-            ]
-        },
         "description": {
             "type": "string",
             "default": "",
@@ -89,7 +81,6 @@
         "breedId": 5,
         "gender": "Male",
         "age": "Young",
-        "picture": "https://cdn-icons-png.flaticon.com/512/3769/3769065.png",
         "description": "I am a good dog",
         "daysAtShelter": 5,
         "goodWKids": true,

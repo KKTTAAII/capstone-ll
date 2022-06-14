@@ -110,7 +110,7 @@ router.post("/", ensureAdmin, async (req, res, next) => {
 
 router.patch("/:userId", ensureCorrectUserOrAdmin, async (req, res, next) => {
   try {
-    if (req.body.logo) {
+    if (!req.body.logo.startsWith("/static/media")) {
       const uploadRes = await cloudinary.uploader.upload(req.body.logo, {
         upload_preset: "petly",
       });
@@ -118,8 +118,6 @@ router.patch("/:userId", ensureCorrectUserOrAdmin, async (req, res, next) => {
         req.body.logo = uploadRes;
       }
     }
-
-    console.log(req.body);
 
     const validator = jsonschema.validate(req.body, shelterUpdateSchema);
     if (!validator.valid) {
